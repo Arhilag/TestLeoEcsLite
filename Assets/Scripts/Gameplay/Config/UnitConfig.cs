@@ -7,9 +7,13 @@ public class UnitConfig : ScriptableObject
 {
     [SerializeField] private float _hp;
     public float HP => _hp;
+    
     [SerializeField] private float _damage;
     public float Damage => _damage;
+    
     [SerializeField] private float _speed;
     public float Speed => _speed;
+    
+    public int WeaponCount;
 
 }
