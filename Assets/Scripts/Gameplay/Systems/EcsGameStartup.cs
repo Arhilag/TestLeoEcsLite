@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using LeoEcsPhysics;
 using UnityEngine;
 using Leopotam.EcsLite;
 using Voody.UniLeo.Lite;
@@ -14,7 +15,8 @@ public class EcsGameStartup : MonoBehaviour
     {
         _world = new EcsWorld();
         _systems = new EcsSystems(_world);
-
+        EcsPhysicsEvents.ecsWorld = _world;
+        
         _systems.ConvertScene();
         
         AddInjections();
@@ -33,7 +35,8 @@ public class EcsGameStartup : MonoBehaviour
     {
         if(_systems == null)
             return;
-        
+
+        EcsPhysicsEvents.ecsWorld = null;
         _systems.Destroy();
         _systems = null;
         _world.Destroy();
@@ -50,7 +53,8 @@ public class EcsGameStartup : MonoBehaviour
             .Add(new PlayerMovableInputSystem())
             .Add(new MovementSystem())
             .Add(new AIMovableInputSystem())
-            .Add(new AIMovementSystem());
+            .Add(new AIMovementSystem())
+            .Add(new DamageInputSystem());
     }
     
     private void AddOneFrames()
