@@ -1,0 +1,19 @@
+{
+    "name": "Doozy.Engine",
+    "rootNamespace": "",
+    "references": [
+        "GUID:fd1742145ca0f164eb415064d2ed3dfd",
+        "GUID:de6713d55efb74410b115525456e47b4",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:0d8beb7f090555447a6cf5ce9e54dbb4"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

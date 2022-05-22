@@ -1,0 +1,17 @@
+{
+    "name": "ClassTypeReferenceEditor",
+    "references": [
+        "GUID:84db9925f7cd60c4285dec825b0b562b"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

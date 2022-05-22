@@ -1,0 +1,93 @@
+using Gamebase;
+using Sirenix.OdinInspector;
+using Sirenix.Utilities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using UnityEngine;
+
+namespace CustomDynamicEnums
+{
+    [CreateAssetMenu(fileName = "@CLASS_NAME", menuName = "DynamicEnums/@CLASS_NAME")]
+    public class @CLASS_NAME : ScriptableObject
+    {
+        [OnValueChanged("ValueChanged", includeChildren: true)]
+        [ValidateInput("ValidateStrings", "Элементы могут содержать только латинские символы и цифры и начинаться обязательно с буквы!")]
+        [ValidateInput("ValidateDuplicate", "Имеются повторяющиеся элементы!")]
+        [SerializeField] private List<@ELEMENT_NAME> dynamicEnum = new List<@ELEMENT_NAME>();
+        
+        [InfoBox("Не забудьте сохранить список после изменений, чтобы он был включен в динамический Enum.", InfoMessageType.Warning)]
+        [EnableIf("ValidateAll")]
+        [Button("Сохранить список")]
+        private void Save()
+        {
+            // Сохранение
+#if UNITY_EDITOR
+            RebuildEnumCode();
+            _valueChanged = false;
+#endif
+        }
+        
+#if UNITY_EDITOR
+        /// <summary>
+        /// Пересборка файла с перечислением.
+        /// </summary>
+        [ContextMenu("Manual Rebuild Enum Code")]
+        public void RebuildEnumCode()
+        {
+            DynamicEnums.ReplaceAndSave("@DYNAMIC_ENUM_NAME", dynamicEnum.Select(e => e.Type).ToList());
+        }
+#endif
+        
+#region Validation
+        private bool ValidateAll => _valueChanged && ValidateStrings(dynamicEnum) && ValidateDuplicate(dynamicEnum);
+        private bool _valueChanged = false;
+
+        private void ValueChanged()
+        {
+            _valueChanged = true;
+        }
+
+        private bool ValidateStrings(List<@ELEMENT_NAME> list)
+        {
+            var result = true;
+            var pattern = @"^[A-Za-z][A-Za-z0-9]*$";
+            if (list.Count > 0)
+            {
+                foreach (var item in list)
+                {
+                    if (item.Type.IsNullOrWhitespace() || !Regex.IsMatch(item.Type, pattern))
+                        result = false;
+                }
+            }
+            else
+            {
+                result = true;
+            }
+
+            return result;
+        }
+
+        private bool ValidateDuplicate(List<@ELEMENT_NAME> list)
+        {
+            return list.GroupBy(x => x.Type).All(g => g.Count() == 1);
+        }
+#endregion
+    }
+    
+    [Serializable]
+    public class @ELEMENT_NAME
+    {
+        public string Type = "";
+
+        public @ELEMENT_NAME()
+        {
+        }
+
+        public @ELEMENT_NAME(string type)
+        {
+            Type = type;
+        }
+    }
+}

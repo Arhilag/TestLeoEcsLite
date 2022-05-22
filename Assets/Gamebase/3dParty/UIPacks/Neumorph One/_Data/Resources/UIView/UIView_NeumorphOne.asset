@@ -1,0 +1,76 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f42f06ff6cc543ea942180e019f0fc8d, type: 3}
+  m_Name: UIView_NeumorphOne
+  m_EditorClassIdentifier: 
+  CategoryName: Neumorph One
+  DatabaseType: 2
+  Names:
+  - AllMusic
+  - BackButton
+  - Card List
+  - Checklist
+  - Drawer
+  - ExampleChecklist
+  - ExampleNote
+  - Favorite List
+  - Main
+  - MainBoard
+  - NeoNote SplashScreen
+  - NeoPlayer SplashScreen
+  - Note
+  - NotesTabButtons
+  - Onboard - Example 1 - View 1
+  - Onboard - Example 1 - View 2
+  - Onboard - Example 1 - View 3
+  - Onboard - Example 1 - View 4
+  - Onboard - Example 2 - View 1
+  - Onboard - Example 2 - View 2
+  - Onboard - Example 2 - View 3
+  - Onboard - Example 3 - View 1
+  - Onboard - Example 3 - View 2
+  - Onboard - Example 3 - View 3
+  - Onboard - Example 3 - View 4
+  - Onboard - Example 4 - View 1
+  - Onboard - Example 4 - View 2
+  - Onboard - Example 4 - View 3
+  - Onboard - Example 4 - View 4
+  - Onboard - Example 5 - View 1
+  - Onboard - Example 5 - View 2
+  - Onboard - Example 5 - View 3
+  - Onboard - Example 5 - View 4
+  - Onboard - Example 5 - View 5
+  - PlayNow
+  - PlusButton
+  - SearchField
+  - Settings
+  - TabButtons
+  - Onboard - Example 6 - View 1
+  - Onboard - Example 6 - View 2
+  - Onboard - Example 6 - View 3
+  - Onboard - Example 7 - View 1
+  - Onboard - Example 7 - View 2
+  - Onboard - Example 7 - View 3
+  - Onboard - Example 7 - View 4
+  - Onboard - Example 7 - View 5
+  - Onboard - Example 7 - View 6
+  - Onboard - Example 7 - View 7
+  - Onboard - Example 8 - View 1
+  - Onboard - Example 8 - View 2
+  - Onboard - Example 8 - View 3
+  - Onboard - Example 9 - View 1
+  - Onboard - Example 9 - View 2
+  - Onboard - Example 9 - View 3
+  - Onboard - Example 10 - View 1
+  - Onboard - Example 10 - View 2
+  - Onboard - Example 10 - View 3
+  - Onboard - Example 10 - View 4

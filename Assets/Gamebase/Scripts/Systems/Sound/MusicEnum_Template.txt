@@ -1,0 +1,10 @@
+﻿#if (GAMEBASE_INITIALIZED)
+namespace Gamebase
+{
+        public enum Music
+        {	
+None,
+@1
+        };
+}
+#endif

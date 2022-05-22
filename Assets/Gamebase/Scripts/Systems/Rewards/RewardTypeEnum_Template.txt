@@ -1,0 +1,10 @@
+﻿#if (GAMEBASE_INITIALIZED)
+namespace Gamebase
+{
+    public enum RewardType
+    {
+        None,
+        @1
+    };
+}
+#endif

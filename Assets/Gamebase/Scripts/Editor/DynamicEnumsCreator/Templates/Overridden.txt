@@ -1,0 +1,8 @@
+#if (GAMEBASE_INITIALIZED)
+namespace CustomDynamicEnums
+{
+    public enum @ENUM_NAME
+    {
+    };
+}
+#endif

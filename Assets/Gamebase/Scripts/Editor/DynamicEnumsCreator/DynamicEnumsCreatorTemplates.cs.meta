@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 66780e85c65e41aa9da316dca1e03e1d
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - templateFile: {fileID: 4900000, guid: 00b5babaaa694fd9976081f7f167eda3, type: 3}
+  - defaultFile: {fileID: 4900000, guid: 072ff82470ee47c69789d3f44af842e5, type: 3}
+  - overriddenFile: {fileID: 4900000, guid: c3edf81edccc4f68b4ef21ab065f2730, type: 3}
+  - scriptableObjectFile: {fileID: 4900000, guid: db7a09c91404451688ccb89badfacc55,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

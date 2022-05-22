@@ -1,0 +1,17 @@
+{
+    "name": "PlayerPrefsEditor.Editor",
+    "references": [
+        "GUID:b5cf5a06eae4eae4b8c0fbcb6575f6e2"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
