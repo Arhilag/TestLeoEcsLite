@@ -25,7 +25,7 @@ sealed class ProjectileMovementSystem : IEcsRunSystem
 
             var speed = parameterComponent.Weapons[0].Speed;
 
-            transform.position += direction * speed;
+            transform.position += direction * speed * Time.deltaTime;
         }
     }
 }

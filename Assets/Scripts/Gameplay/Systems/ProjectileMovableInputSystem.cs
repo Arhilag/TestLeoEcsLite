@@ -17,6 +17,10 @@ class ProjectileMovableInputSystem : IEcsRunSystem, IEcsInitSystem
         foreach (var i in filter)
         {
             ref var modelComponent = ref modelUnit.Get(i);
+            if (modelComponent.modelTransform.gameObject.activeSelf == false)
+            {
+                continue;
+            }
             _targetPosition = modelComponent.modelTransform.position;
             break;
         }
@@ -25,6 +29,10 @@ class ProjectileMovableInputSystem : IEcsRunSystem, IEcsInitSystem
         {
             ref var directionComponent = ref aiUnit.Get(i);
             ref var modelComponent = ref modelUnit.Get(i);
+            if (_targetPosition == null)
+            {
+                directionComponent.Direction = Vector3.left;
+            }
             if (directionComponent.Direction == Vector3.zero)
             {
                 directionComponent.Direction = _targetPosition - modelComponent.modelTransform.position;

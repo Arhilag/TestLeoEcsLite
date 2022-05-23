@@ -9,9 +9,22 @@ sealed class AutoShootingSystem : IEcsRunSystem, IEcsInitSystem
 {
     private EcsWorld _world;
     private GameObject _projectile;
-    private WeaponConfig[] _weapons;
+    private int _weaponsCount;
     public void Run(EcsSystems systems)
     {
+        var filter = _world.Filter<WeaponComponent>().Inc<ModelComponent>().Inc<PlayerTag>().End();
+        var weaponEquip = _world.GetPool<WeaponComponent>();
+        var modelEquip = _world.GetPool<ModelComponent>();
+        foreach (var i in filter)
+        {
+            ref var weaponComponent = ref weaponEquip.Get(i);
+            if (weaponComponent.Weapons.Length > _weaponsCount)
+            {
+                ref var modelComponent = ref modelEquip.Get(i);
+                var transform = modelComponent.modelTransform;
+                SpawnWeapons(_weaponsCount, weaponComponent, transform);
+            }
+        }
     }
 
     public void Init(EcsSystems systems)
@@ -24,13 +37,18 @@ sealed class AutoShootingSystem : IEcsRunSystem, IEcsInitSystem
         {
             ref var weaponComponent = ref weaponEquip.Get(i);
             ref var modelComponent = ref modelEquip.Get(i);
-            var coutWeapons = weaponComponent.Weapons.Length;
             var transform = modelComponent.modelTransform;
-            for (int j = 0; j < coutWeapons; j++)
-            { 
-                var weaponConfig = weaponComponent.Weapons[j];
-                SpawnProjectile(weaponConfig, transform);
-            }
+            SpawnWeapons(0, weaponComponent, transform);
+        }
+    }
+
+    private void SpawnWeapons(int countSpawnWeapon, WeaponComponent weapons, Transform transform)
+    {
+        _weaponsCount = weapons.Weapons.Length;
+        for (int j = countSpawnWeapon; j < weapons.Weapons.Length; j++)
+        { 
+            var weaponConfig = weapons.Weapons[j];
+            SpawnProjectile(weaponConfig, transform);
         }
     }
 

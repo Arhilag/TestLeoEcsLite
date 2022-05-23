@@ -6,6 +6,7 @@ sealed class DamageInputSystem : IEcsRunSystem
 {
     private GameObject _enemyCollision;
     private GameObject _playerCollision;
+    private GameObject _projectileCollision;
     private GameObject _sender;
     public void Run(EcsSystems systems)
     {
@@ -22,18 +23,19 @@ sealed class DamageInputSystem : IEcsRunSystem
         {
             ref var eventData = ref poolEnter.Get(entity);
             _sender = eventData.senderGameObject;
-            foreach (var entit in projectileEnter)
+            foreach (var entityProj in projectileEnter)
             {
-                ref var projectile = ref unitPool.Get(entit);
-                if (projectile.modelTransform.gameObject == _sender)
+                ref var projectile = ref unitPool.Get(entityProj);
+                _projectileCollision = projectile.modelTransform.gameObject;
+                if (_projectileCollision == _sender)
                 {
                     _enemyCollision = eventData.collider.gameObject;
                     break;
                 }
             }
-            foreach (var entit in enemyEnter)
+            foreach (var entityEnemy in enemyEnter)
             {
-                ref var enemy = ref unitPool.Get(entit);
+                ref var enemy = ref unitPool.Get(entityEnemy);
                 if (enemy.modelTransform.gameObject == _sender)
                 {
                     _playerCollision = eventData.collider.gameObject;
@@ -49,6 +51,8 @@ sealed class DamageInputSystem : IEcsRunSystem
             if (enemy.modelTransform.gameObject == _enemyCollision && enemy.modelTransform.gameObject)
             {
                 Debug.Log("damage to enemy");
+                _projectileCollision.SetActive(false);
+                _enemyCollision.SetActive(false);
                 _enemyCollision = null;
                 break;
             }
