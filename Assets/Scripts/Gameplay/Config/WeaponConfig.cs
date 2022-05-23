@@ -13,5 +13,7 @@ public class WeaponConfig : ScriptableObject
     public float Speed => _speed;
     [SerializeField] private float _delay;
     public float Delay => _delay;
+    [SerializeField] private float _lifeTime;
+    public float LifeTime => _lifeTime;
 
 }

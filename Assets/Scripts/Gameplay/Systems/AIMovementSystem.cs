@@ -8,9 +8,9 @@ sealed class AIMovementSystem : IEcsRunSystem
     public void Run(EcsSystems systems)
     {
         EcsWorld world = systems.GetWorld ();
-        var filter = world.Filter<AIDirectionComponent>().Inc<ModelComponent>().Inc<MovableComponent>()
+        var filter = world.Filter<DirectionComponent>().Inc<ModelComponent>().Inc<MovableComponent>()
             .Inc<ParameterComponent>().End();
-        var directionC = world.GetPool<AIDirectionComponent>();
+        var directionC = world.GetPool<DirectionComponent>();
         var model = world.GetPool<ModelComponent>();
         var movable = world.GetPool<MovableComponent>();
         var parameter = world.GetPool<ParameterComponent>();

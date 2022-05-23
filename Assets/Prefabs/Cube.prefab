@@ -88,6 +88,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6102957550208446021, guid: f1a636c0bdb1245479c7e73c66838c47, type: 3}
+      propertyPath: value.Weapons.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6102957550208446021, guid: f1a636c0bdb1245479c7e73c66838c47, type: 3}
+      propertyPath: value.Weapons.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 6cc5490961fc651498cdfe3200241e00, type: 2}
     - target: {fileID: 7436175359536473728, guid: f1a636c0bdb1245479c7e73c66838c47, type: 3}
       propertyPath: m_Name
       value: Cube

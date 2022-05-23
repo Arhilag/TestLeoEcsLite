@@ -1,7 +1,7 @@
 ﻿using Leopotam.EcsLite;
 using UnityEngine;
 
-sealed class AIMovableInputSystem : IEcsRunSystem
+class ProjectileMovableInputSystem : IEcsRunSystem, IEcsInitSystem
 {
     private Vector3 _targetPosition;
         
@@ -9,8 +9,8 @@ sealed class AIMovableInputSystem : IEcsRunSystem
     {
         EcsWorld world = systems.GetWorld ();
         
-        var filter = world.Filter<ModelComponent>().Inc<PlayerTag>().End();
-        var filterAI = world.Filter<ModelComponent>().Inc<DirectionComponent>().Inc<EnemyTag>().End();
+        var filter = world.Filter<ModelComponent>().Inc<EnemyTag>().End();
+        var filterAI = world.Filter<ModelComponent>().Inc<DirectionComponent>().Inc<ProjectileTag>().End();
         var modelUnit = world.GetPool<ModelComponent>();
         var aiUnit = world.GetPool<DirectionComponent>();
         
@@ -18,14 +18,22 @@ sealed class AIMovableInputSystem : IEcsRunSystem
         {
             ref var modelComponent = ref modelUnit.Get(i);
             _targetPosition = modelComponent.modelTransform.position;
+            break;
         }
         
         foreach (var i in filterAI)
         {
             ref var directionComponent = ref aiUnit.Get(i);
             ref var modelComponent = ref modelUnit.Get(i);
-            ref var direction = ref directionComponent.Direction;
-            direction = _targetPosition - modelComponent.modelTransform.position;
+            if (directionComponent.Direction == Vector3.zero)
+            {
+                directionComponent.Direction = _targetPosition - modelComponent.modelTransform.position;
+            }
         }
+    }
+
+    public void Init(EcsSystems systems)
+    {
+        
     }
 }

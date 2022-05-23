@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _projectile: {fileID: 1669693746096677668, guid: 395b7ccb3028f2f4fa9541c38fe95f53, type: 3}
   _damage: 10
-  _speed: 5
+  _speed: 1
   _delay: 1
+  _lifeTime: 0.5

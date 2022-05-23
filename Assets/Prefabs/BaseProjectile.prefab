@@ -9,12 +9,16 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7436175359536473735}
+  - component: {fileID: 6765163368212901182}
+  - component: {fileID: 5943660566133277158}
   - component: {fileID: 7436175359536473731}
   - component: {fileID: 7436175359536473734}
   - component: {fileID: 7436175359536473752}
   - component: {fileID: 7436175359536473753}
   - component: {fileID: 7436175359536473755}
-  - component: {fileID: 6765163368212901182}
+  - component: {fileID: 3407622345823345862}
+  - component: {fileID: 6102957550208446021}
+  - component: {fileID: 4776434644974387662}
   m_Layer: 0
   m_Name: BaseProjectile
   m_TagString: Untagged
@@ -36,6 +40,37 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &6765163368212901182
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7436175359536473728}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!143 &5943660566133277158
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7436175359536473728}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Height: 0.2
+  m_Radius: 0.2
+  m_SlopeLimit: 45
+  m_StepOffset: 0.2
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &7436175359536473731
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -100,16 +135,43 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   value:
     modelTransform: {fileID: 7436175359536473735}
---- !u!65 &6765163368212901182
-BoxCollider:
+--- !u!114 &3407622345823345862
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7436175359536473728}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a56ad8bf965fc84b8f330473e063a29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6102957550208446021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7436175359536473728}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b7166e7e4ae1fa42beb777ebbcf7d72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  value:
+    Weapons: []
+--- !u!114 &4776434644974387662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7436175359536473728}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 394154c6aead32c4aac4be841a1eb6f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  value:
+    characterController: {fileID: 5943660566133277158}

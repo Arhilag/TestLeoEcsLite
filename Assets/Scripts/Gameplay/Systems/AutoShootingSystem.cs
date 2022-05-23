@@ -7,34 +7,19 @@ using Object = UnityEngine.Object;
 
 sealed class AutoShootingSystem : IEcsRunSystem, IEcsInitSystem
 {
+    private EcsWorld _world;
     private GameObject _projectile;
     private WeaponConfig[] _weapons;
     public void Run(EcsSystems systems)
     {
-        // EcsWorld world = systems.GetWorld ();
-        // var filter = world.Filter<WeaponComponent>().Inc<ParameterComponent>().Inc<PlayerTag>().End();
-        // var weaponEquip = world.GetPool<WeaponComponent>();
-        // // var parameterUnit = world.GetPool<ParameterComponent>();
-        //
-        // foreach (var i in filter)
-        // {
-        //     ref var weaponComponent = ref weaponEquip.Get(i);
-        //     // ref var parameterComponent = ref parameterUnit.Get(i);
-        //     // if (_weapons.Length != parameterComponent.Config.WeaponCount)
-        //     // {
-        //     //     //start
-        //     //     _weapons = weaponComponent.Weapons;
-        //     // }
-        // }
-        // var gameObject = Object.Instantiate(_projectile);
     }
 
     public void Init(EcsSystems systems)
     {
-        EcsWorld world = systems.GetWorld ();
-        var filter = world.Filter<WeaponComponent>().Inc<ModelComponent>().Inc<PlayerTag>().End();
-        var weaponEquip = world.GetPool<WeaponComponent>();
-        var modelEquip = world.GetPool<ModelComponent>();
+        _world = systems.GetWorld ();
+        var filter = _world.Filter<WeaponComponent>().Inc<ModelComponent>().Inc<PlayerTag>().End();
+        var weaponEquip = _world.GetPool<WeaponComponent>();
+        var modelEquip = _world.GetPool<ModelComponent>();
         foreach (var i in filter)
         {
             ref var weaponComponent = ref weaponEquip.Get(i);
@@ -43,23 +28,30 @@ sealed class AutoShootingSystem : IEcsRunSystem, IEcsInitSystem
             var transform = modelComponent.modelTransform;
             for (int j = 0; j < coutWeapons; j++)
             { 
-                var projectile = weaponComponent.Weapons[j].Projectile;
-                var delay = weaponComponent.Weapons[j].Delay;
-                SpawnProjectile(projectile, delay, transform);
+                var weaponConfig = weaponComponent.Weapons[j];
+                SpawnProjectile(weaponConfig, transform);
             }
         }
     }
 
-    private async void SpawnProjectile(GameObject projectile, float delay, Transform parent)
+    private async void SpawnProjectile(WeaponConfig weaponConfig, Transform parent)
     {
         while (true)
         {
-            await UniTask.Delay(TimeSpan.FromSeconds(delay), ignoreTimeScale: false);
-            var bullet = Object.Instantiate(projectile);
+            var bullet = Object.Instantiate(weaponConfig.Projectile);
             bullet.transform.position = parent.position;
-            //set direction
-            //set speed
+            await UniTask.Delay(TimeSpan.FromSeconds(weaponConfig.Delay), ignoreTimeScale: false);
+            
+            LifeProjectile(weaponConfig, bullet);
             //take damage and destroy projectile
         }
+    }
+
+    private async void LifeProjectile(WeaponConfig weaponConfig, GameObject projectile)
+    {
+        await UniTask.Delay(TimeSpan.FromSeconds(weaponConfig.LifeTime), ignoreTimeScale: false);
+        
+        // Object.Destroy(projectile);
+        projectile.SetActive(false);
     }
 }

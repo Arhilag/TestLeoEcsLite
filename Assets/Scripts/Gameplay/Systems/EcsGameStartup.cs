@@ -54,6 +54,8 @@ public class EcsGameStartup : MonoBehaviour
             .Add(new MovementSystem())
             .Add(new AIMovableInputSystem())
             .Add(new AIMovementSystem())
+            .Add(new ProjectileMovableInputSystem())
+            .Add(new ProjectileMovementSystem())
             .Add(new DamageInputSystem())
             .Add(new AutoShootingSystem());
     }

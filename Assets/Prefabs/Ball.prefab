@@ -101,6 +101,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5943660566133277158, guid: f1a636c0bdb1245479c7e73c66838c47, type: 3}
+      propertyPath: m_Height
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5943660566133277158, guid: f1a636c0bdb1245479c7e73c66838c47, type: 3}
+      propertyPath: m_Radius
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6102957550208446021, guid: f1a636c0bdb1245479c7e73c66838c47, type: 3}
+      propertyPath: value.Weapons.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6102957550208446021, guid: f1a636c0bdb1245479c7e73c66838c47, type: 3}
+      propertyPath: value.Weapons.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 717e815221b65084ea1e71c680c1bc30, type: 2}
     - target: {fileID: 7436175359536473728, guid: f1a636c0bdb1245479c7e73c66838c47, type: 3}
       propertyPath: m_Name
       value: Ball
