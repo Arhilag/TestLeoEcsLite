@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 
 sealed class EnemySpawnerSystem : IEcsRunSystem, IEcsInitSystem
 {
-    private readonly EcsWorld _world = null;
+    private EcsWorld world = null;
     private Transform _playerTransform;
 
     public void Run(EcsSystems systems)
@@ -16,7 +16,7 @@ sealed class EnemySpawnerSystem : IEcsRunSystem, IEcsInitSystem
     
     public void Init(EcsSystems systems)
     {
-        EcsWorld world = systems.GetWorld ();
+        world = systems.GetWorld ();
         var filter = world.Filter<SpawnerComponent>().End();
         var spawner = world.GetPool<SpawnerComponent>();
         var filterPlayer = world.Filter<ModelComponent>().Inc<PlayerTag>().End();
@@ -61,6 +61,17 @@ sealed class EnemySpawnerSystem : IEcsRunSystem, IEcsInitSystem
                     break;
             }
             Object.Instantiate(config._prefab, bulletTransform, config._prefab.transform.rotation);
+            // var filter = world.Filter<EnemyTag>().Inc<ParameterComponent>().End();
+            // var parameter = world.GetPool<ParameterComponent>();
+            //
+            // foreach (var i in filter)
+            // {
+            //     var parameterComponent = parameter.Get(i);
+            //     if (parameterComponent.HP == 0)
+            //     {
+            //         parameterComponent.HP = parameterComponent.Config.HP;
+            //     }
+            // }
             await UniTask.Delay(TimeSpan.FromSeconds(config.Delay), ignoreTimeScale: false);
         }
     }

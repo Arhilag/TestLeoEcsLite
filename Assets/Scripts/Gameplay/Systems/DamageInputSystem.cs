@@ -4,20 +4,29 @@ using UnityEngine;
 
 sealed class DamageInputSystem : IEcsRunSystem
 {
+    private readonly EcsWorld _world = null;
     private GameObject _enemyCollision;
     private GameObject _playerCollision;
     private GameObject _projectileCollision;
     private GameObject _sender;
+    private float _damage;
+    
     public void Run(EcsSystems systems)
     {
-        var filterEnter = systems.GetWorld().Filter<OnTriggerEnterEvent>().End();
-        var poolEnter = systems.GetWorld().GetPool<OnTriggerEnterEvent>();
-        var projectileEnter = systems.GetWorld().Filter<ProjectileTag>().Inc<ModelComponent>().End();
-        var enemyFilter = systems.GetWorld().Filter<EnemyTag>().Inc<ModelComponent>().End();
-        var unitPool = systems.GetWorld().GetPool<ModelComponent>();
+        EcsWorld world = systems.GetWorld ();
+        var filterEnter = world.Filter<OnTriggerEnterEvent>().End();
+        var poolEnter = world.GetPool<OnTriggerEnterEvent>();
         
-        var enemyEnter = systems.GetWorld().Filter<EnemyTag>().Inc<ModelComponent>().End();
-        var playerFilter = systems.GetWorld().Filter<PlayerTag>().Inc<ModelComponent>().End();
+        var projectileEnter = world.Filter<ProjectileTag>().Inc<ModelComponent>()
+            .Inc<WeaponComponent>().End();
+        var enemyEnter = world.Filter<EnemyTag>().Inc<ModelComponent>()
+            .Inc<ParameterComponent>().End();
+        var playerFilter = world.Filter<PlayerTag>().Inc<ModelComponent>()
+            .Inc<ParameterComponent>().End();
+        
+        var unitPool = world.GetPool<ModelComponent>();
+        var weaponPool = world.GetPool<WeaponComponent>();
+        var paramPool = world.GetPool<ParameterComponent>();
         
         foreach (var entity in filterEnter)
         {
@@ -26,6 +35,8 @@ sealed class DamageInputSystem : IEcsRunSystem
             foreach (var entityProj in projectileEnter)
             {
                 ref var projectile = ref unitPool.Get(entityProj);
+                ref var projectileConfig = ref weaponPool.Get(entityProj);
+                _damage = projectileConfig.Weapons[0].Damage;
                 _projectileCollision = projectile.modelTransform.gameObject;
                 if (_projectileCollision == _sender)
                 {
@@ -44,19 +55,30 @@ sealed class DamageInputSystem : IEcsRunSystem
             }
             poolEnter.Del(entity);
         }
+        
 
-        foreach (var entity in enemyFilter)
+        foreach (var entity in enemyEnter)
         {
             ref var enemy = ref unitPool.Get(entity);
+            ref var enemyParam = ref paramPool.Get(entity);
             if (enemy.modelTransform.gameObject == _enemyCollision && enemy.modelTransform.gameObject)
             {
                 Debug.Log("damage to enemy");
+                if (enemyParam.HP == 0)
+                {
+                    enemyParam.HP = enemyParam.Config.HP;
+                }
+                enemyParam.HP -= _damage;
+                if (enemyParam.HP <= 0)
+                {
+                    _enemyCollision.SetActive(false);
+                }
                 _projectileCollision.SetActive(false);
-                _enemyCollision.SetActive(false);
                 _enemyCollision = null;
                 break;
             }
         }
+        
         
         foreach (var entity in playerFilter)
         {
