@@ -13,7 +13,9 @@ public class UnitConfig : ScriptableObject
     
     [SerializeField] private float _speed;
     public float Speed => _speed;
+    public float Experience;
     
     public int WeaponCount;
+    public GameObject ExperienceCrystal;
 
 }

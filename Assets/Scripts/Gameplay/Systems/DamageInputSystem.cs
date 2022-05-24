@@ -8,8 +8,11 @@ sealed class DamageInputSystem : IEcsRunSystem
     private GameObject _enemyCollision;
     private GameObject _playerCollision;
     private GameObject _projectileCollision;
+    private GameObject _experienceCollision;
     private GameObject _sender;
+    private GameObject _collision;
     private float _damage;
+    private float _experience;
     
     public void Run(EcsSystems systems)
     {
@@ -17,16 +20,19 @@ sealed class DamageInputSystem : IEcsRunSystem
         var filterEnter = world.Filter<OnTriggerEnterEvent>().End();
         var poolEnter = world.GetPool<OnTriggerEnterEvent>();
         
-        var projectileEnter = world.Filter<ProjectileTag>().Inc<ModelComponent>()
+        var projectileFilter = world.Filter<ProjectileTag>().Inc<ModelComponent>()
             .Inc<WeaponComponent>().End();
-        var enemyEnter = world.Filter<EnemyTag>().Inc<ModelComponent>()
+        var enemyFilter = world.Filter<EnemyTag>().Inc<ModelComponent>()
             .Inc<ParameterComponent>().End();
         var playerFilter = world.Filter<PlayerTag>().Inc<ModelComponent>()
             .Inc<ParameterComponent>().End();
+        var experienceFilter = world.Filter<ExperienceComponent>().Inc<ModelComponent>()
+            .Inc<OnTriggerEnterEvent>().End();
         
         var unitPool = world.GetPool<ModelComponent>();
         var weaponPool = world.GetPool<WeaponComponent>();
         var paramPool = world.GetPool<ParameterComponent>();
+        var experiencePool = world.GetPool<ExperienceComponent>();
         
         var filterUI = world.Filter<UIComponent>().End();
         var poolUI = world.GetPool<UIComponent>();
@@ -35,7 +41,8 @@ sealed class DamageInputSystem : IEcsRunSystem
         {
             ref var eventData = ref poolEnter.Get(entity);
             _sender = eventData.senderGameObject;
-            foreach (var entityProj in projectileEnter)
+            _collision = eventData.collider.gameObject;
+            foreach (var entityProj in projectileFilter)
             {
                 ref var projectile = ref unitPool.Get(entityProj);
                 ref var projectileConfig = ref weaponPool.Get(entityProj);
@@ -47,7 +54,7 @@ sealed class DamageInputSystem : IEcsRunSystem
                     break;
                 }
             }
-            foreach (var entityEnemy in enemyEnter)
+            foreach (var entityEnemy in enemyFilter)
             {
                 ref var enemy = ref unitPool.Get(entityEnemy);
                 ref var enemyConfig = ref paramPool.Get(entityEnemy);
@@ -58,15 +65,27 @@ sealed class DamageInputSystem : IEcsRunSystem
                     break;
                 }
             }
+            foreach (var entityExperience in experienceFilter)
+            {
+                ref var experience = ref unitPool.Get(entityExperience);
+                ref var experienceConfig = ref experiencePool.Get(entityExperience);
+                _experience = experienceConfig.ExperienceConfig.Experience;
+                if (experience.modelTransform.gameObject == _sender)
+                {
+                    _playerCollision = eventData.collider.gameObject;
+                    _experienceCollision = _sender;
+                    break;
+                }
+            }
             poolEnter.Del(entity);
         }
         
 
-        foreach (var entity in enemyEnter)
+        foreach (var entity in enemyFilter)
         {
             ref var enemy = ref unitPool.Get(entity);
             ref var enemyParam = ref paramPool.Get(entity);
-            if (enemy.modelTransform.gameObject == _enemyCollision && enemy.modelTransform.gameObject)
+            if (enemy.modelTransform.gameObject == _enemyCollision)
             {
                 Debug.Log("damage to enemy");
                 if (enemyParam.HP == 0)
@@ -77,6 +96,8 @@ sealed class DamageInputSystem : IEcsRunSystem
                 if (enemyParam.HP <= 0)
                 {
                     _enemyCollision.SetActive(false);
+                    Object.Instantiate(enemyParam.Config.ExperienceCrystal, _enemyCollision.transform.position,
+                        _enemyCollision.transform.rotation);
                 }
                 _projectileCollision.SetActive(false);
                 _enemyCollision = null;
@@ -107,6 +128,15 @@ sealed class DamageInputSystem : IEcsRunSystem
                         UIpool._view_Lose.Show();
                     }
                 }
+                _playerCollision = null;
+                break;
+            }
+            
+            if(player.modelTransform.gameObject == _playerCollision && _experience > 0)
+            {
+                Debug.Log("damage to player");
+                _experienceCollision.SetActive(false);
+                playerConfig.Config.Experience += _experience;
                 _playerCollision = null;
                 break;
             }

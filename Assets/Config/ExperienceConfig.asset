@@ -9,12 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0fa49e6632323b340a52f9d39ac483f0, type: 3}
-  m_Name: SpawnerConfig
+  m_Script: {fileID: 11500000, guid: 4b4e64a3466d1c44abc6094cd40d619e, type: 3}
+  m_Name: ExperienceConfig
   m_EditorClassIdentifier: 
-  _prefab: {fileID: 1612916299682625640, guid: 6a9973548159b234f801685e424c844f, type: 3}
-  _up: 23
-  _right: 23
-  _left: -23
-  _down: -11
-  _delay: 0.8
+  _experience: 100

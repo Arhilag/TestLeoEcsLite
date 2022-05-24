@@ -12,14 +12,14 @@ GameObject:
   - component: {fileID: 1612916299682625648}
   - component: {fileID: 1612916299682625649}
   - component: {fileID: 1612916299682625650}
+  - component: {fileID: 1612916299682625661}
+  - component: {fileID: 1612916299682625660}
   - component: {fileID: 1612916299682625651}
   - component: {fileID: 1612916299682625652}
   - component: {fileID: 1612916299682625653}
   - component: {fileID: 1612916299682625655}
   - component: {fileID: 1612916299682625654}
   - component: {fileID: 1612916299682625662}
-  - component: {fileID: 1612916299682625661}
-  - component: {fileID: 1612916299682625660}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -108,6 +108,32 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!136 &1612916299682625661
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1612916299682625640}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1612916299682625660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1612916299682625640}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb86859428142ad498f0661f991407c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1612916299682625651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -188,29 +214,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   value:
     Config: {fileID: 11400000, guid: 8b2fabc3ac00f714989c2113fc3a4db4, type: 2}
---- !u!136 &1612916299682625661
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1612916299682625640}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1612916299682625660
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1612916299682625640}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb86859428142ad498f0661f991407c0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+    HP: 0
