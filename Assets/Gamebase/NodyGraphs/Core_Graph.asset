@@ -146,7 +146,14 @@ MonoBehaviour:
       Doozy.Engine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   m_outputSockets:
   - m_connectionMode: 0
-    m_connections: []
+    m_connections:
+    - m_inputConnectionPoint: {x: 202, y: 4}
+      m_outputConnectionPoint: {x: 202, y: 4}
+      m_id: 978a11c6-3bfe-48b9-a665-80c85eeac47c
+      m_inputNodeId: 35679c08-87c8-4ef8-ab3e-184da3fa0a9b
+      m_inputSocketId: c48dea22-5ae8-4b23-af03-39aa2a0ac6d6
+      m_outputNodeId: ba3b536b-c0f0-4744-8734-fe59d2176902
+      m_outputSocketId: e93213a8-f47c-43ad-993f-78ba4e747c4e
     m_connectionPoints:
     - {x: -2, y: 4}
     - {x: 202, y: 4}
@@ -362,7 +369,14 @@ MonoBehaviour:
       Doozy.Engine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   m_outputSockets:
   - m_connectionMode: 0
-    m_connections: []
+    m_connections:
+    - m_inputConnectionPoint: {x: -2, y: 4}
+      m_outputConnectionPoint: {x: 202, y: 4}
+      m_id: bb68bc20-213a-48da-9ca9-5ea8d65d6a34
+      m_inputNodeId: 35679c08-87c8-4ef8-ab3e-184da3fa0a9b
+      m_inputSocketId: c48dea22-5ae8-4b23-af03-39aa2a0ac6d6
+      m_outputNodeId: 54948158-bf8d-4a5a-999d-7be191814a84
+      m_outputSocketId: 02b7c605-3330-4284-ba71-24dd6deadecf
     m_connectionPoints:
     - {x: -2, y: 4}
     - {x: 202, y: 4}
@@ -430,7 +444,7 @@ MonoBehaviour:
   m_version: 1
   m_description: 
   m_id: 8aab43d6-14d8-491b-a851-ab28171806c1
-  m_lastModified: 132978678014745176
+  m_lastModified: 132978836120236427
 --- !u!114 &3798902117804509133
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -462,6 +476,27 @@ MonoBehaviour:
       m_inputSocketId: c48dea22-5ae8-4b23-af03-39aa2a0ac6d6
       m_outputNodeId: 639fc160-7ec6-4af8-a323-669426f6166d
       m_outputSocketId: be84483e-6680-4021-9ff4-99f91594fd17
+    - m_inputConnectionPoint: {x: 202, y: 4}
+      m_outputConnectionPoint: {x: 202, y: 4}
+      m_id: 978a11c6-3bfe-48b9-a665-80c85eeac47c
+      m_inputNodeId: 35679c08-87c8-4ef8-ab3e-184da3fa0a9b
+      m_inputSocketId: c48dea22-5ae8-4b23-af03-39aa2a0ac6d6
+      m_outputNodeId: ba3b536b-c0f0-4744-8734-fe59d2176902
+      m_outputSocketId: e93213a8-f47c-43ad-993f-78ba4e747c4e
+    - m_inputConnectionPoint: {x: -2, y: 4}
+      m_outputConnectionPoint: {x: 202, y: 4}
+      m_id: bb68bc20-213a-48da-9ca9-5ea8d65d6a34
+      m_inputNodeId: 35679c08-87c8-4ef8-ab3e-184da3fa0a9b
+      m_inputSocketId: c48dea22-5ae8-4b23-af03-39aa2a0ac6d6
+      m_outputNodeId: 54948158-bf8d-4a5a-999d-7be191814a84
+      m_outputSocketId: 02b7c605-3330-4284-ba71-24dd6deadecf
+    - m_inputConnectionPoint: {x: 202, y: 4}
+      m_outputConnectionPoint: {x: -2, y: 4}
+      m_id: c48f82f8-7bab-40d8-a351-52072f17eb4b
+      m_inputNodeId: 35679c08-87c8-4ef8-ab3e-184da3fa0a9b
+      m_inputSocketId: c48dea22-5ae8-4b23-af03-39aa2a0ac6d6
+      m_outputNodeId: f1fb3782-aae9-43fa-b9e1-4fe54d225507
+      m_outputSocketId: a5d2c6f1-7826-40e4-97b5-e2de1c705d38
     m_connectionPoints:
     - {x: -2, y: 4}
     - {x: 202, y: 4}
@@ -765,7 +800,14 @@ MonoBehaviour:
       Doozy.Engine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   m_outputSockets:
   - m_connectionMode: 0
-    m_connections: []
+    m_connections:
+    - m_inputConnectionPoint: {x: 202, y: 4}
+      m_outputConnectionPoint: {x: -2, y: 4}
+      m_id: c48f82f8-7bab-40d8-a351-52072f17eb4b
+      m_inputNodeId: 35679c08-87c8-4ef8-ab3e-184da3fa0a9b
+      m_inputSocketId: c48dea22-5ae8-4b23-af03-39aa2a0ac6d6
+      m_outputNodeId: f1fb3782-aae9-43fa-b9e1-4fe54d225507
+      m_outputSocketId: a5d2c6f1-7826-40e4-97b5-e2de1c705d38
     m_connectionPoints:
     - {x: -2, y: 4}
     - {x: 202, y: 4}

@@ -56,12 +56,13 @@ sealed class AutoShootingSystem : IEcsRunSystem, IEcsInitSystem
     {
         while (true)
         {
-            var bullet = Object.Instantiate(weaponConfig.Projectile);
-            bullet.transform.position = parent.position;
+            if (weaponConfig.Level > 0)
+            {
+                var bullet = Object.Instantiate(weaponConfig.Projectile);
+                bullet.transform.position = parent.position;
+                LifeProjectile(weaponConfig, bullet);
+            }
             await UniTask.Delay(TimeSpan.FromSeconds(weaponConfig.Delay), ignoreTimeScale: false);
-            
-            LifeProjectile(weaponConfig, bullet);
-            //take damage and destroy projectile
         }
     }
 

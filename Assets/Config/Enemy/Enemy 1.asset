@@ -9,13 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f42f06ff6cc543ea942180e019f0fc8d, type: 3}
-  m_Name: UIView_CoreGameplay
+  m_Script: {fileID: 11500000, guid: c79a09b1658d12040a710a4d389b33b1, type: 3}
+  m_Name: Enemy 1
   m_EditorClassIdentifier: 
-  CategoryName: CoreGameplay
-  DatabaseType: 2
-  Names:
-  - Win
-  - Lose
-  - LevelUp
-  - Main
+  _hp: 20
+  _damage: 20
+  _speed: 7
+  ExperienceCrystal: {fileID: 21430428285536229, guid: 9eff7d88ec0cf4e4da35339394577b06, type: 3}

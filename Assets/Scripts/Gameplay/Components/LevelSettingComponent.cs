@@ -1,9 +1,9 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public struct WeaponComponent
+public struct LevelSettingComponent
 {
+    public LevelConfig Setting;
     public WeaponConfig[] Weapons;
 }

@@ -1,10 +1,11 @@
 ﻿using LeoEcsPhysics;
 using Leopotam.EcsLite;
 using UnityEngine;
+using UnityEngine.UI;
 
-sealed class DamageInputSystem : IEcsRunSystem
+sealed class DamageInputSystem : IEcsRunSystem, IEcsInitSystem
 {
-    private readonly EcsWorld _world = null;
+    private EcsWorld world = null;
     private GameObject _enemyCollisionIn;
     private GameObject _enemyCollisionOut;
     private GameObject _playerCollision;
@@ -12,12 +13,27 @@ sealed class DamageInputSystem : IEcsRunSystem
     private GameObject _experienceCollision;
     private GameObject _sender;
     private GameObject _collision;
-    private float _damage;
+    private float _enemyDamage;
+    private float _playerDamage;
     private float _experience;
+    private Slider _hpBar;
     
+    public void Init(EcsSystems systems)
+    {
+        world = systems.GetWorld ();
+        var uifilter = world.Filter<MainUIComponent>().End();
+        var uipool = world.GetPool<MainUIComponent>();
+
+        foreach (var entity in uifilter)
+        {
+            ref var uiComponent = ref uipool.Get(entity);
+            _hpBar = uiComponent.HPbar;
+        }
+
+    }
+
     public void Run(EcsSystems systems)
     {
-        EcsWorld world = systems.GetWorld ();
         var filterEnter = world.Filter<OnTriggerEnterEvent>().End();
         var poolEnter = world.GetPool<OnTriggerEnterEvent>();
         
@@ -42,12 +58,11 @@ sealed class DamageInputSystem : IEcsRunSystem
         {
             ref var eventData = ref poolEnter.Get(entity);
             _sender = eventData.senderGameObject;
-            // _collision = eventData.collider.gameObject;
             foreach (var entityProj in projectileFilter)
             {
                 ref var projectile = ref unitPool.Get(entityProj);
                 ref var projectileConfig = ref weaponPool.Get(entityProj);
-                _damage = projectileConfig.Weapons[0].Damage;
+                _playerDamage = projectileConfig.Weapons[0].Damage * projectileConfig.Weapons[0].Level;
                 _projectileCollision = projectile.modelTransform.gameObject;
                 if (_projectileCollision == _sender)
                 {
@@ -59,7 +74,7 @@ sealed class DamageInputSystem : IEcsRunSystem
             {
                 ref var enemy = ref unitPool.Get(entityEnemy);
                 ref var enemyConfig = ref paramPool.Get(entityEnemy);
-                _damage = enemyConfig.Config.Damage;
+                _enemyDamage = enemyConfig.Config.Damage;
                 if (enemy.modelTransform.gameObject == _sender)
                 {
                     _enemyCollisionOut = enemy.modelTransform.gameObject;
@@ -95,7 +110,7 @@ sealed class DamageInputSystem : IEcsRunSystem
                 {
                     enemyParam.HP = enemyParam.Config.HP;
                 }
-                enemyParam.HP -= _damage;
+                enemyParam.HP -= _playerDamage;
                 if (enemyParam.HP <= 0)
                 {
                     _enemyCollisionIn.SetActive(false);
@@ -121,7 +136,8 @@ sealed class DamageInputSystem : IEcsRunSystem
                 {
                     playerConfig.HP = playerConfig.Config.HP;
                 }
-                playerConfig.HP -= _damage;
+                playerConfig.HP -= _enemyDamage;
+                _hpBar.value = playerConfig.HP / playerConfig.Config.HP;
                 if (playerConfig.HP <= 0)
                 {
                     Time.timeScale = 0;

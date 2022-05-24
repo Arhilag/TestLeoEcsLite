@@ -10,5 +10,6 @@ public struct MainUIComponent
     public TextMeshProUGUI Text_time;
     public TextMeshProUGUI Text_level;
     public TextMeshProUGUI Text_countKill;
-    public Scrollbar Levelbar;
+    public Slider Levelbar;
+    public Slider HPbar;
 }

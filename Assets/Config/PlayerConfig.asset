@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _hp: 100
   _speed: 10
-  Experience: 0
+  Experience: 1500
   WeaponCount: 0

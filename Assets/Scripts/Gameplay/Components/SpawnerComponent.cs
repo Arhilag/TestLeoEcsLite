@@ -4,5 +4,5 @@ using UnityEngine;
 [Serializable]
 public struct SpawnerComponent
 {
-    public SpawnerConfig SpawnerConfig;
+    public SpawnerConfig[] SpawnerConfig;
 }
