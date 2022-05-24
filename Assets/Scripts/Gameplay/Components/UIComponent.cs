@@ -7,4 +7,5 @@ public struct UIComponent
 {
     public UIView _view_Lose;
     public UIView _view_Win;
+    public UIView _view_LevelUp;
 }

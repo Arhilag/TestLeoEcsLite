@@ -35,7 +35,7 @@ public class EcsGameStartup : MonoBehaviour
     {
         if(_systems == null)
             return;
-
+        
         EcsPhysicsEvents.ecsWorld = null;
         _systems.Destroy();
         _systems = null;
