@@ -26,12 +26,13 @@ sealed class DamageInputSystem : IEcsRunSystem
         var enemyFilter = world.Filter<EnemyTag>().Inc<ModelComponent>()
             .Inc<ParameterComponent>().End();
         var playerFilter = world.Filter<PlayerTag>().Inc<ModelComponent>()
-            .Inc<ParameterComponent>().End();
+            .Inc<PlayerParameterComponent>().End();
         var experienceFilter = world.Filter<ExperienceComponent>().Inc<ModelComponent>().End();
         
         var unitPool = world.GetPool<ModelComponent>();
         var weaponPool = world.GetPool<WeaponComponent>();
         var paramPool = world.GetPool<ParameterComponent>();
+        var playerparamPool = world.GetPool<PlayerParameterComponent>();
         var experiencePool = world.GetPool<ExperienceComponent>();
         
         var filterUI = world.Filter<UIComponent>().End();
@@ -70,7 +71,7 @@ sealed class DamageInputSystem : IEcsRunSystem
             {
                 ref var experience = ref unitPool.Get(entityExperience);
                 ref var experienceConfig = ref experiencePool.Get(entityExperience);
-                _experience = experienceConfig.ExperienceConfig.Experience;
+                _experience = experienceConfig.CristalConfig.Experience;
                 if (experience.modelTransform.gameObject == _sender)
                 {
                     _playerCollision = eventData.collider.gameObject;
@@ -112,7 +113,7 @@ sealed class DamageInputSystem : IEcsRunSystem
         foreach (var entity in playerFilter)
         {
             ref var player = ref unitPool.Get(entity);
-            ref var playerConfig = ref paramPool.Get(entity);
+            ref var playerConfig = ref playerparamPool.Get(entity);
             if (player.modelTransform.gameObject == _playerCollision && _enemyCollisionOut)
             {
                 Debug.Log("damage to player");

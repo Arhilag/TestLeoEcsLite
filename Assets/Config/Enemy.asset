@@ -14,6 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _hp: 10
   _damage: 50
-  _speed: 1
-  WeaponCount: 0
+  _speed: 5
   ExperienceCrystal: {fileID: 21430428285536229, guid: 9eff7d88ec0cf4e4da35339394577b06, type: 3}

@@ -62,17 +62,6 @@ sealed class EnemySpawnerSystem : IEcsRunSystem, IEcsInitSystem
                     break;
             }
             Object.Instantiate(config._prefab, bulletTransform, config._prefab.transform.rotation);
-            // var filter = world.Filter<EnemyTag>().Inc<ParameterComponent>().End();
-            // var parameter = world.GetPool<ParameterComponent>();
-            //
-            // foreach (var i in filter)
-            // {
-            //     var parameterComponent = parameter.Get(i);
-            //     if (parameterComponent.HP == 0)
-            //     {
-            //         parameterComponent.HP = parameterComponent.Config.HP;
-            //     }
-            // }
             await UniTask.Delay(TimeSpan.FromSeconds(config.Delay), ignoreTimeScale: false);
         }
     }

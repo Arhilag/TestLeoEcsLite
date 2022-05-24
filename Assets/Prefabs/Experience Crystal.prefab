@@ -139,7 +139,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   value:
-    ExperienceConfig: {fileID: 11400000, guid: 0a3b08ad71f309549837a597df49abc2, type: 2}
+    CristalConfig: {fileID: 11400000, guid: f7876980deedd8c4aaadbc507b4d7f46, type: 2}
 --- !u!114 &2403458777093835790
 MonoBehaviour:
   m_ObjectHideFlags: 0

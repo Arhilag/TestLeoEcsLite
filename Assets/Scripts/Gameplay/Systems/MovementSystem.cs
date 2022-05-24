@@ -9,11 +9,11 @@ sealed class MovementSystem : IEcsRunSystem
     {
         EcsWorld world = systems.GetWorld ();
         var filter = world.Filter<DirectionComponent>().Inc<ModelComponent>().Inc<MovableComponent>()
-            .Inc<ParameterComponent>().End();
+            .Inc<PlayerParameterComponent>().End();
         var directionC = world.GetPool<DirectionComponent>();
         var model = world.GetPool<ModelComponent>();
         var movable = world.GetPool<MovableComponent>();
-        var parameter = world.GetPool<ParameterComponent>();
+        var parameter = world.GetPool<PlayerParameterComponent>();
         
         foreach (var i in filter)
         {

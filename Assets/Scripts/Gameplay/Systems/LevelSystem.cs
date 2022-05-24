@@ -5,15 +5,15 @@ using UnityEngine;
 sealed class LevelSystem : IEcsRunSystem, IEcsInitSystem
 {
     private EcsWorld _world = null;
-    private UnitConfig _playerConfig;
+    private PlayerConfig _playerConfig;
     private float _globalTime;
     private TextMeshProUGUI _text_time;
     public void Init(EcsSystems systems)
     {
         EcsWorld _world = systems.GetWorld ();
         
-        var playerFilter = _world.Filter<PlayerTag>().Inc<ParameterComponent>().End();
-        var parameterpool = _world.GetPool<ParameterComponent>();
+        var playerFilter = _world.Filter<PlayerTag>().Inc<PlayerParameterComponent>().End();
+        var parameterpool = _world.GetPool<PlayerParameterComponent>();
         var UIFilter = _world.Filter<MainUIComponent>().End();
         var UIpool = _world.GetPool<MainUIComponent>();
         foreach (var entity in playerFilter)

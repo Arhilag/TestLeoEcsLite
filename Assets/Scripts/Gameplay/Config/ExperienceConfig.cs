@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "ExperienceConfig", menuName = "Config/ExperienceConfig")]
 public class ExperienceConfig : ScriptableObject
 {
-    [SerializeField] private float _experience;
-    public float Experience => _experience;
+    [SerializeField] private int[] _experienceToUp;
+    public int[] ExperienceToUp => _experienceToUp;
 
 }
