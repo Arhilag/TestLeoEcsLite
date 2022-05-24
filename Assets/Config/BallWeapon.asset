@@ -15,5 +15,5 @@ MonoBehaviour:
   _projectile: {fileID: 3628968730394063558, guid: 9aed9196fc1b96e4c83d09cd837ced27, type: 3}
   _damage: 5
   _speed: 20
-  _delay: 0.9
+  _delay: 2
   _lifeTime: 0.5

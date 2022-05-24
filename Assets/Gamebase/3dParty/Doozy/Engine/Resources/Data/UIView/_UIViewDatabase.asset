@@ -18,7 +18,9 @@ MonoBehaviour:
   - Gamebase
   - General
   - Neumorph One
+  - CoreGameplay
   Categories:
   - {fileID: 11400000, guid: fffedd838e7d497479bb0378853d29e4, type: 2}
   - {fileID: 11400000, guid: 1087452f408eda54b8242afdba01c2b1, type: 2}
   - {fileID: 11400000, guid: ba0378d1cb98ca84a927c52d5edd5f4f, type: 2}
+  - {fileID: 11400000, guid: be8fb1bfe94dffc4f999cbd04eb39cf3, type: 2}

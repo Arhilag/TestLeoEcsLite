@@ -17,4 +17,4 @@ MonoBehaviour:
   _right: 23
   _left: -23
   _down: -11
-  _delay: 0.8
+  _delay: 0.5

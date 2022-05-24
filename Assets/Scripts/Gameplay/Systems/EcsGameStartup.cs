@@ -50,6 +50,7 @@ public class EcsGameStartup : MonoBehaviour
     private void AddSystems()
     {
         _systems
+            .Add(new InitSystem())
             .Add(new PlayerMovableInputSystem())
             .Add(new MovementSystem())
             .Add(new AIMovableInputSystem())

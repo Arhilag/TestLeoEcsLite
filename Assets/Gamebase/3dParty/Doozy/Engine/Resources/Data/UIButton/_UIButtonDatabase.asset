@@ -19,8 +19,10 @@ MonoBehaviour:
   - General
   - Neumorph One
   - MainMenu
+  - CoreGameplay
   Categories:
   - {fileID: 11400000, guid: 6e753f2e2469a6c489e84a19aecf9a7e, type: 2}
   - {fileID: 11400000, guid: 1bf0e62b8c3956a479178dbfa3282f63, type: 2}
   - {fileID: 11400000, guid: 4b48a704ffcc88f498deb563d61c9718, type: 2}
   - {fileID: 11400000, guid: 1f84e8164d65d604da63a38003fec694, type: 2}
+  - {fileID: 11400000, guid: 55bf43252065d2e4cbfd5b65d0d605f4, type: 2}
