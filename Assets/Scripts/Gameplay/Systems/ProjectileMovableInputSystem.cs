@@ -36,6 +36,7 @@ class ProjectileMovableInputSystem : IEcsRunSystem, IEcsInitSystem
             if (directionComponent.Direction == Vector3.zero)
             {
                 directionComponent.Direction = _targetPosition - modelComponent.modelTransform.position;
+                directionComponent.Angle = new Vector3(0, 0.5f, 0);
             }
         }
     }

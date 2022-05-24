@@ -16,5 +16,5 @@ MonoBehaviour:
   _damage: 10
   _speed: 20
   _delay: 1
-  _lifeTime: 0.5
+  _lifeTime: 1.5
   Level: 1

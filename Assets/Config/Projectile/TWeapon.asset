@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d89af988a5b7e4a48aa6ffe0b1d72afb, type: 3}
   m_Name: TWeapon
   m_EditorClassIdentifier: 
-  _projectile: {fileID: 3628968730394063558, guid: 9aed9196fc1b96e4c83d09cd837ced27, type: 3}
+  _projectile: {fileID: 5226190649380636980, guid: ef204dae039ad52428b93d940737b09f, type: 3}
   _damage: 5
-  _speed: 20
+  _speed: 0
   _delay: 1.1
-  _lifeTime: 0.5
-  Level: 1
+  _lifeTime: 3
+  Level: 0

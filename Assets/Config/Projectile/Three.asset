@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d89af988a5b7e4a48aa6ffe0b1d72afb, type: 3}
-  m_Name: TWeapon 1
+  m_Name: Three
   m_EditorClassIdentifier: 
-  _projectile: {fileID: 3628968730394063558, guid: 9aed9196fc1b96e4c83d09cd837ced27, type: 3}
-  _damage: 5
-  _speed: 20
+  _projectile: {fileID: 517573651887237389, guid: 1d8221480fa23344ea03daa3770a9dad, type: 3}
+  _damage: 20
+  _speed: 10
   _delay: 1.1
-  _lifeTime: 0.5
-  Level: 1
+  _lifeTime: 1.5
+  Level: 0

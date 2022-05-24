@@ -22,7 +22,7 @@ sealed class ProjectileMovementSystem : IEcsRunSystem
 
             var direction = directionComponent.Direction.normalized;
             var transform = modelComponent.modelTransform;
-
+            modelComponent.modelTransform.Rotate(directionComponent.Angle);
             var speed = parameterComponent.Weapons[0].Speed;
 
             transform.position += direction * speed * Time.deltaTime;

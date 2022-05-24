@@ -47,6 +47,11 @@ sealed class LevelSystem : IEcsRunSystem, IEcsInitSystem
             _playerConfig = parameterpool.Get(entity);
             ref var experience = ref experiencepool.Get(entity);
             _playerWeapons = eaponPool.Get(entity);
+            _playerWeapons.Weapons[0].Level = 1;
+            for (var i = 1; i < _playerWeapons.Weapons.Length; i++)
+            {
+                _playerWeapons.Weapons[i].Level = 0;
+            }
             _experienceConfig = experience.ExperienceSetting;
         }
 
