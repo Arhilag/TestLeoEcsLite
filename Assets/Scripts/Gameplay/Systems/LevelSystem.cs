@@ -82,30 +82,22 @@ sealed class LevelSystem : IEcsRunSystem, IEcsInitSystem
         var minute = (int) _globalTime / 60;
         _text_time.text = minute + ":" + ((int)_globalTime-minute*60);
         _text_lvl.text = _lvlNumber + "";
-        if (_lvlNumber == 0)
-        {
-            _slider.value = _playerConfig.Config.Experience / _experienceConfig.ExperienceToUp[_lvlNumber];
-        }
-        else
-        {
-            _slider.value = (_playerConfig.Config.Experience - _experienceConfig.ExperienceToUp[_lvlNumber-1]) 
-                / _experienceConfig.ExperienceToUp[_lvlNumber];
-        }
+        _slider.value = _playerConfig.Config.Experience / _experienceConfig.ExperienceToUp[_lvlNumber];
         if (minute >= _timeLimit)
         {
             _views._view_Win.Show();
             Time.timeScale = 0;
         }
 
-        if (_lvlNumber < _experienceConfig.ExperienceToUp.Length)
+        if (_lvlNumber < _experienceConfig.ExperienceToUp.Length-1)
         {
             if (_playerConfig.Config.Experience > _experienceConfig.ExperienceToUp[_lvlNumber])
             {
                 _lvlNumber++;
+                _playerConfig.Config.Experience = 0;
                 _views._view_LevelUp.Show();
                 Time.timeScale = 0;
                 
-                Debug.Log(_playerWeapons.Weapons.Length);
                 foreach (var weapon in _weapons)
                 {
                     if (weapon.Level > 0)

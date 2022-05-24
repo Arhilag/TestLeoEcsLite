@@ -5,7 +5,7 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
-sealed class EnemySpawnerSystem : IEcsRunSystem, IEcsInitSystem
+sealed class EnemySpawnerSystem : IEcsInitSystem
 {
     private EcsWorld world = null;
     private Transform _playerTransform;
@@ -13,9 +13,6 @@ sealed class EnemySpawnerSystem : IEcsRunSystem, IEcsInitSystem
     private SpawnerConfig[] _configs;
     private int _configNumber;
     
-    public void Run(EcsSystems systems)
-    {
-    }
     
     public void Init(EcsSystems systems)
     {

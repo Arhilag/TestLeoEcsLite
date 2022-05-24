@@ -70,7 +70,6 @@ sealed class AutoShootingSystem : IEcsRunSystem, IEcsInitSystem
     {
         await UniTask.Delay(TimeSpan.FromSeconds(weaponConfig.LifeTime), ignoreTimeScale: false);
         
-        // Object.Destroy(projectile);
         projectile.SetActive(false);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using LeoEcsPhysics;
 using Leopotam.EcsLite;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,6 +18,8 @@ sealed class DamageInputSystem : IEcsRunSystem, IEcsInitSystem
     private float _playerDamage;
     private float _experience;
     private Slider _hpBar;
+    private TextMeshProUGUI _textCountKills;
+    private int _countKill;
     
     public void Init(EcsSystems systems)
     {
@@ -28,6 +31,7 @@ sealed class DamageInputSystem : IEcsRunSystem, IEcsInitSystem
         {
             ref var uiComponent = ref uipool.Get(entity);
             _hpBar = uiComponent.HPbar;
+            _textCountKills = uiComponent.Text_countKill;
         }
 
     }
@@ -113,6 +117,8 @@ sealed class DamageInputSystem : IEcsRunSystem, IEcsInitSystem
                 enemyParam.HP -= _playerDamage;
                 if (enemyParam.HP <= 0)
                 {
+                    _countKill++;
+                    _textCountKills.text = _countKill + "";
                     _enemyCollisionIn.SetActive(false);
                     Object.Instantiate(enemyParam.Config.ExperienceCrystal, _enemyCollisionIn.transform.position,
                         _enemyCollisionIn.transform.rotation);
