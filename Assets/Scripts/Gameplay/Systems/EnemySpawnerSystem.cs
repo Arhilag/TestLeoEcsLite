@@ -16,6 +16,7 @@ sealed class EnemySpawnerSystem : IEcsRunSystem, IEcsInitSystem
     
     public void Init(EcsSystems systems)
     {
+        Debug.Log("Init");
         world = systems.GetWorld ();
         var filter = world.Filter<SpawnerComponent>().End();
         var spawner = world.GetPool<SpawnerComponent>();

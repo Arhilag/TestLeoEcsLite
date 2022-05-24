@@ -6,6 +6,7 @@ namespace Gamebase
 	    None,
         ProgressLevelChanged,
         XPChanged,
+ReturnTimeScale=-1281989609,
 
         };
 }

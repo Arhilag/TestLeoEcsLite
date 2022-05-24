@@ -51,13 +51,13 @@ public class EcsGameStartup : MonoBehaviour
     {
         _systems
             .Add(new InitSystem())
+            .Add(new LevelSystem())
             .Add(new PlayerMovableInputSystem())
             .Add(new MovementSystem())
             .Add(new AIMovableInputSystem())
             .Add(new AIMovementSystem())
             .Add(new ProjectileMovableInputSystem())
             .Add(new ProjectileMovementSystem())
-            // .Add(new TriggerInputSystem())
             .Add(new DamageInputSystem())
             .Add(new AutoShootingSystem())
             .Add(new EnemySpawnerSystem());
