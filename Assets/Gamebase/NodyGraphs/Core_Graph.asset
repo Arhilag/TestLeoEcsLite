@@ -183,7 +183,7 @@ MonoBehaviour:
     m_connections:
     - m_inputConnectionPoint: {x: 202, y: 4}
       m_outputConnectionPoint: {x: -2, y: 4}
-      m_id: 14edd6fc-b3d6-4f3d-ab91-4b28dcab4c82
+      m_id: c7ee7967-8d7c-4278-9fd3-9cc8948ae961
       m_inputNodeId: 54948158-bf8d-4a5a-999d-7be191814a84
       m_inputSocketId: f9fff3db-39f3-4d56-b05a-040ce6d49e94
       m_outputNodeId: 35679c08-87c8-4ef8-ab3e-184da3fa0a9b
@@ -274,7 +274,7 @@ MonoBehaviour:
   m_version: 1
   m_description: 
   m_id: 8aab43d6-14d8-491b-a851-ab28171806c1
-  m_lastModified: 132978544121971592
+  m_lastModified: 132978659451551587
 --- !u!114 &3798902117804509133
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -377,7 +377,14 @@ MonoBehaviour:
     m_valueTypeQualifiedName: Doozy.Engine.UI.Connections.UIConnection, Doozy.Engine,
       Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   - m_connectionMode: 0
-    m_connections: []
+    m_connections:
+    - m_inputConnectionPoint: {x: -2, y: 4}
+      m_outputConnectionPoint: {x: 202, y: 4}
+      m_id: b52a3315-33f0-466c-8fd0-fe1f24d78a24
+      m_inputNodeId: f1fb3782-aae9-43fa-b9e1-4fe54d225507
+      m_inputSocketId: 224e3fa0-4c5d-4df7-ad68-22a1e16476d0
+      m_outputNodeId: 35679c08-87c8-4ef8-ab3e-184da3fa0a9b
+      m_outputSocketId: 99e4c0c3-9089-42f6-9d4e-22dd6236f433
     m_connectionPoints:
     - {x: -2, y: 4}
     - {x: 202, y: 4}
@@ -399,7 +406,7 @@ MonoBehaviour:
     m_connections:
     - m_inputConnectionPoint: {x: 202, y: 4}
       m_outputConnectionPoint: {x: -2, y: 4}
-      m_id: 14edd6fc-b3d6-4f3d-ab91-4b28dcab4c82
+      m_id: c7ee7967-8d7c-4278-9fd3-9cc8948ae961
       m_inputNodeId: 54948158-bf8d-4a5a-999d-7be191814a84
       m_inputSocketId: f9fff3db-39f3-4d56-b05a-040ce6d49e94
       m_outputNodeId: 35679c08-87c8-4ef8-ab3e-184da3fa0a9b
@@ -474,7 +481,14 @@ MonoBehaviour:
   ErrorDuplicateNameFoundInGraph: 0
   m_inputSockets:
   - m_connectionMode: 1
-    m_connections: []
+    m_connections:
+    - m_inputConnectionPoint: {x: -2, y: 4}
+      m_outputConnectionPoint: {x: 202, y: 4}
+      m_id: b52a3315-33f0-466c-8fd0-fe1f24d78a24
+      m_inputNodeId: f1fb3782-aae9-43fa-b9e1-4fe54d225507
+      m_inputSocketId: 224e3fa0-4c5d-4df7-ad68-22a1e16476d0
+      m_outputNodeId: 35679c08-87c8-4ef8-ab3e-184da3fa0a9b
+      m_outputSocketId: 99e4c0c3-9089-42f6-9d4e-22dd6236f433
     m_connectionPoints:
     - {x: -2, y: 4}
     - {x: 202, y: 4}

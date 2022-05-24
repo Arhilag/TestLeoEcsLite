@@ -5,7 +5,8 @@ using UnityEngine;
 sealed class DamageInputSystem : IEcsRunSystem
 {
     private readonly EcsWorld _world = null;
-    private GameObject _enemyCollision;
+    private GameObject _enemyCollisionIn;
+    private GameObject _enemyCollisionOut;
     private GameObject _playerCollision;
     private GameObject _projectileCollision;
     private GameObject _experienceCollision;
@@ -26,8 +27,7 @@ sealed class DamageInputSystem : IEcsRunSystem
             .Inc<ParameterComponent>().End();
         var playerFilter = world.Filter<PlayerTag>().Inc<ModelComponent>()
             .Inc<ParameterComponent>().End();
-        var experienceFilter = world.Filter<ExperienceComponent>().Inc<ModelComponent>()
-            .Inc<OnTriggerEnterEvent>().End();
+        var experienceFilter = world.Filter<ExperienceComponent>().Inc<ModelComponent>().End();
         
         var unitPool = world.GetPool<ModelComponent>();
         var weaponPool = world.GetPool<WeaponComponent>();
@@ -41,7 +41,7 @@ sealed class DamageInputSystem : IEcsRunSystem
         {
             ref var eventData = ref poolEnter.Get(entity);
             _sender = eventData.senderGameObject;
-            _collision = eventData.collider.gameObject;
+            // _collision = eventData.collider.gameObject;
             foreach (var entityProj in projectileFilter)
             {
                 ref var projectile = ref unitPool.Get(entityProj);
@@ -50,7 +50,7 @@ sealed class DamageInputSystem : IEcsRunSystem
                 _projectileCollision = projectile.modelTransform.gameObject;
                 if (_projectileCollision == _sender)
                 {
-                    _enemyCollision = eventData.collider.gameObject;
+                    _enemyCollisionIn = eventData.collider.gameObject;
                     break;
                 }
             }
@@ -61,6 +61,7 @@ sealed class DamageInputSystem : IEcsRunSystem
                 _damage = enemyConfig.Config.Damage;
                 if (enemy.modelTransform.gameObject == _sender)
                 {
+                    _enemyCollisionOut = enemy.modelTransform.gameObject;
                     _playerCollision = eventData.collider.gameObject;
                     break;
                 }
@@ -74,6 +75,7 @@ sealed class DamageInputSystem : IEcsRunSystem
                 {
                     _playerCollision = eventData.collider.gameObject;
                     _experienceCollision = _sender;
+                    _enemyCollisionOut = null;
                     break;
                 }
             }
@@ -85,7 +87,7 @@ sealed class DamageInputSystem : IEcsRunSystem
         {
             ref var enemy = ref unitPool.Get(entity);
             ref var enemyParam = ref paramPool.Get(entity);
-            if (enemy.modelTransform.gameObject == _enemyCollision)
+            if (enemy.modelTransform.gameObject == _enemyCollisionIn)
             {
                 Debug.Log("damage to enemy");
                 if (enemyParam.HP == 0)
@@ -95,13 +97,13 @@ sealed class DamageInputSystem : IEcsRunSystem
                 enemyParam.HP -= _damage;
                 if (enemyParam.HP <= 0)
                 {
-                    _enemyCollision.SetActive(false);
-                    Object.Instantiate(enemyParam.Config.ExperienceCrystal, _enemyCollision.transform.position,
-                        _enemyCollision.transform.rotation);
+                    _enemyCollisionIn.SetActive(false);
+                    Object.Instantiate(enemyParam.Config.ExperienceCrystal, _enemyCollisionIn.transform.position,
+                        _enemyCollisionIn.transform.rotation);
                 }
                 _projectileCollision.SetActive(false);
-                _enemyCollision = null;
-                
+                _enemyCollisionIn = null;
+                _projectileCollision = null;
                 break;
             }
         }
@@ -111,7 +113,7 @@ sealed class DamageInputSystem : IEcsRunSystem
         {
             ref var player = ref unitPool.Get(entity);
             ref var playerConfig = ref paramPool.Get(entity);
-            if (player.modelTransform.gameObject == _playerCollision && player.modelTransform.gameObject)
+            if (player.modelTransform.gameObject == _playerCollision && _enemyCollisionOut)
             {
                 Debug.Log("damage to player");
                 if (playerConfig.HP == 0)
@@ -129,15 +131,17 @@ sealed class DamageInputSystem : IEcsRunSystem
                     }
                 }
                 _playerCollision = null;
+                _enemyCollisionOut = null;
                 break;
             }
             
-            if(player.modelTransform.gameObject == _playerCollision && _experience > 0)
+            if(player.modelTransform.gameObject == _playerCollision && _experienceCollision)
             {
-                Debug.Log("damage to player");
+                Debug.Log("EXP to player");
                 _experienceCollision.SetActive(false);
                 playerConfig.Config.Experience += _experience;
                 _playerCollision = null;
+                _experienceCollision = null;
                 break;
             }
         }
