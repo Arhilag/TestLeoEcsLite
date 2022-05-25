@@ -1,9 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using LeoEcsPhysics;
 using UnityEngine;
 using Leopotam.EcsLite;
+using Leopotam.EcsLite.Di;
 using Voody.UniLeo.Lite;
 
 public class EcsGameStartup : MonoBehaviour
@@ -19,16 +17,16 @@ public class EcsGameStartup : MonoBehaviour
         
         _systems.ConvertScene();
         
-        AddInjections();
         AddOneFrames();
         AddSystems();
         
+        AddInjections();
         _systems.Init();
     }
 
     void Update()
     {
-        _systems.Run();
+        _systems?.Run();
     }
 
     private void OnDestroy()
@@ -45,6 +43,7 @@ public class EcsGameStartup : MonoBehaviour
 
     private void AddInjections()
     {
+        _systems.Inject();
     }
 
     private void AddSystems()
@@ -58,6 +57,7 @@ public class EcsGameStartup : MonoBehaviour
             .Add(new AIMovementSystem())
             .Add(new ProjectileMovableInputSystem())
             .Add(new ProjectileMovementSystem())
+            .Add(new ProjectileLifeSystem())
             .Add(new DamageInputSystem())
             .Add(new AutoShootingSystem())
             .Add(new EnemySpawnerSystem());

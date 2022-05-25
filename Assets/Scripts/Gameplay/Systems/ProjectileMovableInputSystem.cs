@@ -1,7 +1,7 @@
 ﻿using Leopotam.EcsLite;
 using UnityEngine;
 
-class ProjectileMovableInputSystem : IEcsRunSystem, IEcsInitSystem
+class ProjectileMovableInputSystem : IEcsRunSystem
 {
     private Vector3 _targetPosition;
         
@@ -39,10 +39,5 @@ class ProjectileMovableInputSystem : IEcsRunSystem, IEcsInitSystem
                 directionComponent.Angle = new Vector3(0, 0.5f, 0);
             }
         }
-    }
-
-    public void Init(EcsSystems systems)
-    {
-        
     }
 }

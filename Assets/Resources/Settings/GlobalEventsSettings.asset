@@ -16,3 +16,4 @@ MonoBehaviour:
   - name: ProgressLevelChanged
   - name: XPChanged
   - name: ReturnTimeScale
+  - name: RestartScene

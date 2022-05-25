@@ -9064,6 +9064,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 717e815221b65084ea1e71c680c1bc30, type: 2}
     - {fileID: 11400000, guid: 6cc5490961fc651498cdfe3200241e00, type: 2}
     - {fileID: 11400000, guid: 992027633ce61c9428da8129f41d7146, type: 2}
+    - {fileID: 11400000, guid: e1efd781ef8d4a340b62ea55cbc2ef59, type: 2}
 --- !u!114 &484352101
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24759,7 +24760,6 @@ GameObject:
   - component: {fileID: 1107720655}
   - component: {fileID: 1107720659}
   - component: {fileID: 1107720658}
-  - component: {fileID: 1107720657}
   m_Layer: 0
   m_Name: UIPool
   m_TagString: Untagged
@@ -24816,18 +24816,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   convertMode: 0
   customWorld: 
---- !u!114 &1107720657
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1107720653}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 04482f2b940aee94dab0de20f445ad2c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1107720658
 MonoBehaviour:
   m_ObjectHideFlags: 0

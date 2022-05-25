@@ -1,27 +1,31 @@
-﻿using System;
-using Cysharp.Threading.Tasks;
-using Leopotam.EcsLite;
+﻿using Leopotam.EcsLite;
 using UnityEngine;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
-sealed class EnemySpawnerSystem : IEcsInitSystem
+sealed class EnemySpawnerSystem : IEcsInitSystem, IEcsRunSystem
 {
-    private EcsWorld world = null;
+    private EcsWorld _world = null;
     private Transform _playerTransform;
     private SpawnerConfig _config;
     private SpawnerConfig[] _configs;
     private int _configNumber;
-    
-    
+    private LevelConfig _levelConfig;
+    private float _targetTime;
+
     public void Init(EcsSystems systems)
     {
-        world = systems.GetWorld ();
+        _world = systems.GetWorld ();
 
-        var filter = world.Filter<SpawnerComponent>().End();
-        var spawner = world.GetPool<SpawnerComponent>();
-        var filterPlayer = world.Filter<ModelComponent>().Inc<PlayerTag>().End();
-        var player = world.GetPool<ModelComponent>();
+        var filter = _world.Filter<SpawnerComponent>().End();
+        var spawner = _world.GetPool<SpawnerComponent>();
+        
+        var filterPlayer = _world.Filter<ModelComponent>().Inc<PlayerTag>().End();
+        var player = _world.GetPool<ModelComponent>();
+        
+        var levelFilter = _world.Filter<LevelSettingComponent>().End();
+        var levelPool = _world.GetPool<LevelSettingComponent>();
+        
         foreach (var i in filterPlayer)
         {
             ref var playerComponent = ref player.Get(i);
@@ -34,15 +38,23 @@ sealed class EnemySpawnerSystem : IEcsInitSystem
             _configs = spawnerComponent.SpawnerConfig;
             _config = spawnerComponent.SpawnerConfig[0];
             _configNumber = 0;
-            SpawnEnemy();
-            Timer();
+            _targetTime = _config.LevelTime;
+            _config.IndicationTime = 0;
+        }
+        foreach (var i in levelFilter)
+        {
+            ref var levelComponent = ref levelPool.Get(i);
+
+            _levelConfig = levelComponent.Setting;
         }
     }
     
-    private async void SpawnEnemy()
+    public void Run(EcsSystems systems)
     {
-        while (true)
+        _config.IndicationTime += Time.deltaTime;
+        if (_config.IndicationTime >= _config.Delay)
         {
+            _config.IndicationTime = 0;
             Vector3 bulletTransform = _playerTransform.position;
             var randomSide = Random.Range(0, 4);
             switch (randomSide)
@@ -65,18 +77,13 @@ sealed class EnemySpawnerSystem : IEcsInitSystem
                     break;
             }
             Object.Instantiate(_config._prefab, bulletTransform, _config._prefab.transform.rotation);
-            await UniTask.Delay(TimeSpan.FromSeconds(_config.Delay), ignoreTimeScale: false);
         }
-    }
 
-    private async void Timer()
-    {
-        await UniTask.Delay(TimeSpan.FromSeconds(_config.TotalTime), ignoreTimeScale: false);
-        if (_configNumber < _configs.Length)
+        if (_targetTime >= _levelConfig.GlobalTime)
         {
             _configNumber++;
             _config = _configs[_configNumber];
-            Timer();
+            _targetTime += _config.LevelTime;
         }
     }
 }

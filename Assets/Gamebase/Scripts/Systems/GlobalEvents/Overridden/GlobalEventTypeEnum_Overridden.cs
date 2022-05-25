@@ -7,6 +7,7 @@ namespace Gamebase
         ProgressLevelChanged,
         XPChanged,
 ReturnTimeScale=-1281989609,
+RestartScene=2144670501,
 
         };
 }

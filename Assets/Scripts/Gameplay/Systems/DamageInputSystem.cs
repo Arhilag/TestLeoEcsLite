@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 sealed class DamageInputSystem : IEcsRunSystem, IEcsInitSystem
 {
-    private EcsWorld world = null;
+    private EcsWorld _world = null;
     private GameObject _enemyCollisionIn;
     private GameObject _enemyCollisionOut;
     private GameObject _playerCollision;
@@ -23,40 +23,39 @@ sealed class DamageInputSystem : IEcsRunSystem, IEcsInitSystem
     
     public void Init(EcsSystems systems)
     {
-        world = systems.GetWorld ();
-        var uifilter = world.Filter<MainUIComponent>().End();
-        var uipool = world.GetPool<MainUIComponent>();
+        _world = systems.GetWorld ();
+        var uiFilter = _world.Filter<MainUIComponent>().End();
+        var uiPool = _world.GetPool<MainUIComponent>();
 
-        foreach (var entity in uifilter)
+        foreach (var entity in uiFilter)
         {
-            ref var uiComponent = ref uipool.Get(entity);
+            ref var uiComponent = ref uiPool.Get(entity);
             _hpBar = uiComponent.HPbar;
             _textCountKills = uiComponent.Text_countKill;
         }
-
     }
 
     public void Run(EcsSystems systems)
     {
-        var filterEnter = world.Filter<OnTriggerEnterEvent>().End();
-        var poolEnter = world.GetPool<OnTriggerEnterEvent>();
+        var filterEnter = _world.Filter<OnTriggerEnterEvent>().End();
+        var poolEnter = _world.GetPool<OnTriggerEnterEvent>();
         
-        var projectileFilter = world.Filter<ProjectileTag>().Inc<ModelComponent>()
+        var projectileFilter = _world.Filter<ProjectileTag>().Inc<ModelComponent>()
             .Inc<WeaponComponent>().End();
-        var enemyFilter = world.Filter<EnemyTag>().Inc<ModelComponent>()
+        var enemyFilter = _world.Filter<EnemyTag>().Inc<ModelComponent>()
             .Inc<ParameterComponent>().End();
-        var playerFilter = world.Filter<PlayerTag>().Inc<ModelComponent>()
+        var playerFilter = _world.Filter<PlayerTag>().Inc<ModelComponent>()
             .Inc<PlayerParameterComponent>().End();
-        var experienceFilter = world.Filter<ExperienceComponent>().Inc<ModelComponent>().End();
+        var experienceFilter = _world.Filter<ExperienceComponent>().Inc<ModelComponent>().End();
         
-        var unitPool = world.GetPool<ModelComponent>();
-        var weaponPool = world.GetPool<WeaponComponent>();
-        var paramPool = world.GetPool<ParameterComponent>();
-        var playerparamPool = world.GetPool<PlayerParameterComponent>();
-        var experiencePool = world.GetPool<ExperienceComponent>();
+        var unitPool = _world.GetPool<ModelComponent>();
+        var weaponPool = _world.GetPool<WeaponComponent>();
+        var paramPool = _world.GetPool<ParameterComponent>();
+        var playerParamPool = _world.GetPool<PlayerParameterComponent>();
+        var experiencePool = _world.GetPool<ExperienceComponent>();
         
-        var filterUI = world.Filter<UIComponent>().End();
-        var poolUI = world.GetPool<UIComponent>();
+        var filterUI = _world.Filter<UIComponent>().End();
+        var poolUI = _world.GetPool<UIComponent>();
         
         foreach (var entity in filterEnter)
         {
@@ -101,7 +100,6 @@ sealed class DamageInputSystem : IEcsRunSystem, IEcsInitSystem
             }
             poolEnter.Del(entity);
         }
-        
 
         foreach (var entity in enemyFilter)
         {
@@ -130,11 +128,10 @@ sealed class DamageInputSystem : IEcsRunSystem, IEcsInitSystem
             }
         }
         
-        
         foreach (var entity in playerFilter)
         {
             ref var player = ref unitPool.Get(entity);
-            ref var playerConfig = ref playerparamPool.Get(entity);
+            ref var playerConfig = ref playerParamPool.Get(entity);
             if (player.modelTransform.gameObject == _playerCollision && _enemyCollisionOut)
             {
                 Debug.Log("damage to player");
@@ -149,8 +146,8 @@ sealed class DamageInputSystem : IEcsRunSystem, IEcsInitSystem
                     Time.timeScale = 0;
                     foreach (var entityUI in filterUI)
                     {
-                        ref var UIpool = ref poolUI.Get(entityUI);
-                        UIpool._view_Lose.Show();
+                        ref var uIpool = ref poolUI.Get(entityUI);
+                        uIpool._view_Lose.Show();
                     }
                 }
                 _playerCollision = null;

@@ -3,16 +3,16 @@ using UnityEngine;
 
 sealed class ProjectileMovementSystem : IEcsRunSystem
 {
-    private readonly EcsWorld _world = null;
+    private EcsWorld _world = null;
 
     public void Run(EcsSystems systems)
     {
-        EcsWorld world = systems.GetWorld ();
-        var filter = world.Filter<DirectionComponent>().Inc<ModelComponent>()
+        _world = systems.GetWorld ();
+        var filter = _world.Filter<DirectionComponent>().Inc<ModelComponent>()
             .Inc<WeaponComponent>().Inc<ProjectileTag>().End();
-        var directionC = world.GetPool<DirectionComponent>();
-        var model = world.GetPool<ModelComponent>();
-        var parameter = world.GetPool<WeaponComponent>();
+        var directionC = _world.GetPool<DirectionComponent>();
+        var model = _world.GetPool<ModelComponent>();
+        var parameter = _world.GetPool<WeaponComponent>();
         
         foreach (var i in filter)
         {

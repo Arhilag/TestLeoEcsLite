@@ -16,6 +16,7 @@ public class SpawnerConfig : ScriptableObject
     public float Down => _down;
     [SerializeField] private float _delay;
     public float Delay => _delay;
-    [SerializeField] private float _totalTime;
-    public float TotalTime => _totalTime;
+    [SerializeField] private float _levelTime;
+    public float LevelTime => _levelTime;
+    public float IndicationTime;
 }

@@ -1,75 +1,49 @@
-﻿using System;
-using System.Collections;
-using Cysharp.Threading.Tasks;
-using Leopotam.EcsLite;
+﻿using Leopotam.EcsLite;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
 sealed class AutoShootingSystem : IEcsRunSystem, IEcsInitSystem
 {
     private EcsWorld _world;
-    private GameObject _projectile;
-    private int _weaponsCount;
-    public void Run(EcsSystems systems)
-    {
-        var filter = _world.Filter<WeaponComponent>().Inc<ModelComponent>().Inc<PlayerTag>().End();
-        var weaponEquip = _world.GetPool<WeaponComponent>();
-        var modelEquip = _world.GetPool<ModelComponent>();
-        foreach (var i in filter)
-        {
-            ref var weaponComponent = ref weaponEquip.Get(i);
-            if (weaponComponent.Weapons.Length > _weaponsCount)
-            {
-                ref var modelComponent = ref modelEquip.Get(i);
-                var transform = modelComponent.modelTransform;
-                SpawnWeapons(_weaponsCount, weaponComponent, transform);
-            }
-        }
-    }
-
+    private EcsFilter _filter;
+    
     public void Init(EcsSystems systems)
     {
         _world = systems.GetWorld ();
-        var filter = _world.Filter<WeaponComponent>().Inc<ModelComponent>().Inc<PlayerTag>().End();
+        _filter = _world.Filter<WeaponComponent>().Inc<ModelComponent>().Inc<PlayerTag>().End();
+        var weaponEquip = _world.GetPool<WeaponComponent>();
+        foreach (var i in _filter)
+        {
+            ref var weaponComponent = ref weaponEquip.Get(i);
+            foreach (var weaponConfig in weaponComponent.Weapons)
+            {
+                weaponConfig.IndicationDelay = 0;
+            }
+        }
+    }
+    
+    public void Run(EcsSystems systems)
+    {
         var weaponEquip = _world.GetPool<WeaponComponent>();
         var modelEquip = _world.GetPool<ModelComponent>();
-        foreach (var i in filter)
+        foreach (var i in _filter)
         {
             ref var weaponComponent = ref weaponEquip.Get(i);
             ref var modelComponent = ref modelEquip.Get(i);
             var transform = modelComponent.modelTransform;
-            SpawnWeapons(0, weaponComponent, transform);
-        }
-    }
-
-    private void SpawnWeapons(int countSpawnWeapon, WeaponComponent weapons, Transform transform)
-    {
-        _weaponsCount = weapons.Weapons.Length;
-        for (int j = countSpawnWeapon; j < weapons.Weapons.Length; j++)
-        { 
-            var weaponConfig = weapons.Weapons[j];
-            SpawnProjectile(weaponConfig, transform);
-        }
-    }
-
-    private async void SpawnProjectile(WeaponConfig weaponConfig, Transform parent)
-    {
-        while (true)
-        {
-            if (weaponConfig.Level > 0)
+            foreach (var weaponConfig in weaponComponent.Weapons)
             {
-                var bullet = Object.Instantiate(weaponConfig.Projectile);
-                bullet.transform.position = parent.position;
-                LifeProjectile(weaponConfig, bullet);
+                if (weaponConfig.Level > 0)
+                {
+                    weaponConfig.IndicationDelay += Time.deltaTime;
+                    if (weaponConfig.IndicationDelay >= weaponConfig.Delay)
+                    {
+                        weaponConfig.IndicationDelay = 0;
+                        weaponConfig.IndicationTime = 0;
+                        Object.Instantiate(weaponConfig.Projectile, transform.position, transform.rotation);
+                    }
+                }
             }
-            await UniTask.Delay(TimeSpan.FromSeconds(weaponConfig.Delay), ignoreTimeScale: false);
         }
-    }
-
-    private async void LifeProjectile(WeaponConfig weaponConfig, GameObject projectile)
-    {
-        await UniTask.Delay(TimeSpan.FromSeconds(weaponConfig.LifeTime), ignoreTimeScale: false);
-        
-        projectile.SetActive(false);
     }
 }

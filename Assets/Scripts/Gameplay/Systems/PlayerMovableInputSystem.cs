@@ -3,8 +3,8 @@ using UnityEngine;
 
 sealed class PlayerMovableInputSystem : IEcsRunSystem
 {
-    private float moveX;
-    private float moveZ;
+    private float _moveX;
+    private float _moveZ;
         
     public void Run(EcsSystems systems)
     {
@@ -17,14 +17,14 @@ sealed class PlayerMovableInputSystem : IEcsRunSystem
             ref var directionComponent = ref player.Get(i);
             ref var direction = ref directionComponent.Direction;
                 
-            direction.x = moveX;
-            direction.z = moveZ;
+            direction.x = _moveX;
+            direction.z = _moveZ;
         }
     }
 
     private void SetDirection()
     {
-        moveX = Input.GetAxis("Horizontal");
-        moveZ = Input.GetAxis("Vertical");
+        _moveX = Input.GetAxis("Horizontal");
+        _moveZ = Input.GetAxis("Vertical");
     }
 }

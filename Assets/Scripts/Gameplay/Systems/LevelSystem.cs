@@ -1,5 +1,4 @@
-﻿using Doozy.Engine.UI;
-using Leopotam.EcsLite;
+﻿using Leopotam.EcsLite;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,10 +7,9 @@ sealed class LevelSystem : IEcsRunSystem, IEcsInitSystem
 {
     private EcsWorld _world = null;
     private PlayerParameterComponent _playerConfig;
-    private float _globalTime;
-    private float _timeLimit;
-    private TextMeshProUGUI _text_time;
-    private TextMeshProUGUI _text_lvl;
+    private LevelConfig _levelConfig;
+    private TextMeshProUGUI _textTime;
+    private TextMeshProUGUI _textLvl;
     private Slider _slider;
     private UIComponent _views;
     private LevelButtonComponent _levelButtons;
@@ -25,7 +23,7 @@ sealed class LevelSystem : IEcsRunSystem, IEcsInitSystem
     
     public void Init(EcsSystems systems)
     {
-        EcsWorld _world = systems.GetWorld ();
+        _world = systems.GetWorld ();
         
         var playerFilter = _world.Filter<PlayerTag>().Inc<PlayerParameterComponent>()
             .Inc<PlayerExperienceComponent>().Inc<WeaponComponent>().End();
@@ -56,24 +54,24 @@ sealed class LevelSystem : IEcsRunSystem, IEcsInitSystem
         }
 
         _lvlNumber = 0;
-        _globalTime = 0;
         foreach (var entity in UIFilter)
         {
-            ref var UI = ref UIpool.Get(entity);
+            ref var ui = ref UIpool.Get(entity);
             _views = UIviews.Get(entity);
             _levelButtons = LevelButton.Get(entity);
-            _text_time = UI.Text_time;
-            _text_lvl = UI.Text_level;
-            _slider = UI.Levelbar;
+            _textTime = ui.Text_time;
+            _textLvl = ui.Text_level;
+            _slider = ui.Levelbar;
         }
         
         foreach (var entity in LevelFilter)
         {
             ref var settingConfig = ref Levelpool.Get(entity);
-            _timeLimit = settingConfig.Setting.TimeLimit;
+            _levelConfig = settingConfig.Setting;
             _weapons = settingConfig.Weapons;
         }
 
+        _levelConfig.GlobalTime = 0;
         _playerConfig.Config.Experience = 0;
         
         _levelButtons.Button_weapon_1.onClick.AddListener(ClickOne);
@@ -83,12 +81,12 @@ sealed class LevelSystem : IEcsRunSystem, IEcsInitSystem
     
     public void Run(EcsSystems systems)
     {
-        _globalTime += Time.deltaTime;
-        var minute = (int) _globalTime / 60;
-        _text_time.text = minute + ":" + ((int)_globalTime-minute*60);
-        _text_lvl.text = _lvlNumber + "";
+        _levelConfig.GlobalTime += Time.deltaTime;
+        var minute = (int) _levelConfig.GlobalTime / 60;
+        _textTime.text = minute + ":" + ((int)_levelConfig.GlobalTime-minute*60);
+        _textLvl.text = _lvlNumber + "";
         _slider.value = _playerConfig.Config.Experience / _experienceConfig.ExperienceToUp[_lvlNumber];
-        if (minute >= _timeLimit)
+        if (_levelConfig.GlobalTime >= _levelConfig.TimeLimit)
         {
             _views._view_Win.Show();
             Time.timeScale = 0;

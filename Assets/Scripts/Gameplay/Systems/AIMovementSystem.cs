@@ -3,17 +3,17 @@ using UnityEngine;
 
 sealed class AIMovementSystem : IEcsRunSystem
 {
-    private readonly EcsWorld _world = null;
+    private EcsWorld _world = null;
 
     public void Run(EcsSystems systems)
     {
-        EcsWorld world = systems.GetWorld ();
-        var filter = world.Filter<DirectionComponent>().Inc<ModelComponent>().Inc<MovableComponent>()
+        _world = systems.GetWorld ();
+        var filter = _world.Filter<DirectionComponent>().Inc<ModelComponent>().Inc<MovableComponent>()
             .Inc<ParameterComponent>().End();
-        var directionC = world.GetPool<DirectionComponent>();
-        var model = world.GetPool<ModelComponent>();
-        var movable = world.GetPool<MovableComponent>();
-        var parameter = world.GetPool<ParameterComponent>();
+        var directionC = _world.GetPool<DirectionComponent>();
+        var model = _world.GetPool<ModelComponent>();
+        var movable = _world.GetPool<MovableComponent>();
+        var parameter = _world.GetPool<ParameterComponent>();
         
         foreach (var i in filter)
         {

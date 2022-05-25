@@ -1,3 +1,10 @@
-﻿using Voody.UniLeo.Lite;
+﻿using System;
+using Voody.UniLeo.Lite;
 
-public class ModelProvider : MonoProvider<ModelComponent> { }
+public class ModelProvider : MonoProvider<ModelComponent>
+{
+    private void Awake()
+    {
+        value.modelTransform = transform;
+    }
+}
