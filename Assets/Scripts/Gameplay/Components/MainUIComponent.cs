@@ -12,4 +12,8 @@ public struct MainUIComponent
     public TextMeshProUGUI Text_countKill;
     public Slider Levelbar;
     public Slider HPbar;
+    public Image IconCube;
+    public Image IconBall;
+    public Image IconThree;
+    public Image IconT;
 }

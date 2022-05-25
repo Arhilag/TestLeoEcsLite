@@ -8,9 +8,6 @@ sealed class LevelSystem : IEcsRunSystem, IEcsInitSystem
     private EcsWorld _world = null;
     private PlayerParameterComponent _playerConfig;
     private LevelConfig _levelConfig;
-    private TextMeshProUGUI _textTime;
-    private TextMeshProUGUI _textLvl;
-    private Slider _slider;
     private UIComponent _views;
     private LevelButtonComponent _levelButtons;
     private ExperienceConfig _experienceConfig;
@@ -20,6 +17,7 @@ sealed class LevelSystem : IEcsRunSystem, IEcsInitSystem
     private WeaponConfig _secondWeapon;
     private WeaponConfig _thirdWeapon;
     private WeaponComponent _playerWeapons;
+    private MainUIComponent _mainUIComponent;
     
     public void Init(EcsSystems systems)
     {
@@ -50,6 +48,7 @@ sealed class LevelSystem : IEcsRunSystem, IEcsInitSystem
             {
                 _playerWeapons.Weapons[i].Level = 0;
             }
+
             _experienceConfig = experience.ExperienceSetting;
         }
 
@@ -59,9 +58,7 @@ sealed class LevelSystem : IEcsRunSystem, IEcsInitSystem
             ref var ui = ref UIpool.Get(entity);
             _views = UIviews.Get(entity);
             _levelButtons = LevelButton.Get(entity);
-            _textTime = ui.Text_time;
-            _textLvl = ui.Text_level;
-            _slider = ui.Levelbar;
+            _mainUIComponent = ui;
         }
         
         foreach (var entity in LevelFilter)
@@ -77,15 +74,17 @@ sealed class LevelSystem : IEcsRunSystem, IEcsInitSystem
         _levelButtons.Button_weapon_1.onClick.AddListener(ClickOne);
         _levelButtons.Button_weapon_2.onClick.AddListener(ClickTwo);
         _levelButtons.Button_weapon_3.onClick.AddListener(ClickThree);
+        
+        UpdateIcons();
     }
     
     public void Run(EcsSystems systems)
     {
         _levelConfig.GlobalTime += Time.deltaTime;
         var minute = (int) _levelConfig.GlobalTime / 60;
-        _textTime.text = minute + ":" + ((int)_levelConfig.GlobalTime-minute*60);
-        _textLvl.text = _lvlNumber + "";
-        _slider.value = _playerConfig.Config.Experience / _experienceConfig.ExperienceToUp[_lvlNumber];
+        _mainUIComponent.Text_time.text = minute + ":" + ((int)_levelConfig.GlobalTime-minute*60);
+        _mainUIComponent.Text_level.text = _lvlNumber + "";
+        _mainUIComponent.Levelbar.value = _playerConfig.Config.Experience / _experienceConfig.ExperienceToUp[_lvlNumber];
         if (_levelConfig.GlobalTime >= _levelConfig.TimeLimit)
         {
             _views._view_Win.Show();
@@ -132,13 +131,30 @@ sealed class LevelSystem : IEcsRunSystem, IEcsInitSystem
     private void ClickOne()
     {
         _firstWeapon.Level++;
+        UpdateIcons();
     }
     private void ClickTwo()
     {
         _secondWeapon.Level++;
+        UpdateIcons();
     }
     private void ClickThree()
     {
         _thirdWeapon.Level++;
+        UpdateIcons();
+    }
+
+    private void UpdateIcons()
+    {
+        Image[] icons = new Image[4] 
+        {_mainUIComponent.IconCube, _mainUIComponent.IconBall, 
+            _mainUIComponent.IconThree, _mainUIComponent.IconT};
+        for (var i = 0; i < _playerWeapons.Weapons.Length; i++)
+        {
+            if (_playerWeapons.Weapons[i].Level > 0)
+            {
+                icons[i].gameObject.SetActive(true);
+            }
+        }
     }
 }
