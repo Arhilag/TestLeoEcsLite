@@ -121,7 +121,7 @@ sealed class DamageInputSystem : IEcsRunSystem, IEcsInitSystem
                     Object.Instantiate(enemyParam.Config.ExperienceCrystal, _enemyCollisionIn.transform.position,
                         _enemyCollisionIn.transform.rotation);
                 }
-                _projectileCollision.SetActive(false);
+                
                 _enemyCollisionIn = null;
                 _projectileCollision = null;
                 break;
