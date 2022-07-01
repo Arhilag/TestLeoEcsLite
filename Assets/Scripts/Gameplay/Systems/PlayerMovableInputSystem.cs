@@ -10,7 +10,8 @@ sealed class PlayerMovableInputSystem : IEcsRunSystem
     {
         SetDirection();
         EcsWorld world = systems.GetWorld ();
-        var filter = world.Filter<DirectionComponent>().Inc<PlayerTag>().End();
+        var filter = world.Filter<DirectionComponent>()
+            .Inc<PlayerTag>().End();
         var player = world.GetPool<DirectionComponent>();
         foreach (var i in filter)
         {

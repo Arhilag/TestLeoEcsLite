@@ -7,20 +7,17 @@ sealed class ProjectileLifeSystem : IEcsRunSystem, IEcsInitSystem
 
     public void Run(EcsSystems systems)
     {
-        var filter = _world.Filter<WeaponComponent>().Inc<ModelComponent>().Inc<ProjectileTag>().End();
-        var weaponEquip = _world.GetPool<WeaponComponent>();
-        var modelEquip = _world.GetPool<ModelComponent>();
+        var filter = _world.Filter<LifeTimeComponent>()
+            .Inc<ProjectileTag>().End();
+        var weaponEquip = _world.GetPool<LifeTimeComponent>();
         foreach (var i in filter)
         {
-            ref var weaponComponent = ref weaponEquip.Get(i);
-            ref var modelComponent = ref modelEquip.Get(i);
-            var transform = modelComponent.modelTransform;
-            var weaponConfig = weaponComponent.Weapons[0];
-            weaponConfig.IndicationTime += Time.deltaTime;
-            if (weaponConfig.IndicationTime >= weaponConfig.LifeTime)
+            ref var lifeTimeComponent = ref weaponEquip.Get(i);
+            lifeTimeComponent.LifeTime -= Time.deltaTime;
+            if (lifeTimeComponent.LifeTime <= 0)
             {
-                weaponConfig.IndicationTime = 0;
-                transform.gameObject.SetActive(false);
+                var deathPool = _world.GetPool<DeathComponent>();
+                deathPool.Add(i);
             }
         }
     }

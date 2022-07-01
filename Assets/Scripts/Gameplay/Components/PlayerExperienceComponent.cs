@@ -4,5 +4,5 @@ using UnityEngine;
 [Serializable]
 public struct PlayerExperienceComponent
 {
-    public ExperienceConfig ExperienceSetting;
+    public int[] ExperienceToUp;
 }

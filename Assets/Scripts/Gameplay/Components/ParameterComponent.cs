@@ -5,6 +5,6 @@ using UnityEngine;
 [Serializable]
 public struct ParameterComponent
 {
-    public UnitConfig Config;
+    // public UnitConfig Config;
     [HideInInspector] public float HP;
 }

@@ -9,10 +9,15 @@ class ProjectileMovableInputSystem : IEcsRunSystem
     {
         EcsWorld world = systems.GetWorld ();
         
-        var filter = world.Filter<ModelComponent>().Inc<EnemyTag>().End();
-        var filterAI = world.Filter<ModelComponent>().Inc<DirectionComponent>().Inc<ProjectileTag>().End();
+        var filter = world.Filter<ModelComponent>()
+            .Inc<EnemyTag>().End();
+        var filterAI = world.Filter<ModelComponent>()
+            .Inc<DirectionComponent>()
+            .Inc<ProjectileTag>()
+            .Inc<AngleComponent>().End();
         var modelUnit = world.GetPool<ModelComponent>();
         var aiUnit = world.GetPool<DirectionComponent>();
+        var angle = world.GetPool<AngleComponent>();
         
         foreach (var i in filter)
         {
@@ -29,6 +34,7 @@ class ProjectileMovableInputSystem : IEcsRunSystem
         {
             ref var directionComponent = ref aiUnit.Get(i);
             ref var modelComponent = ref modelUnit.Get(i);
+            ref var angleComponent = ref angle.Get(i);
             if (_targetPosition == null)
             {
                 directionComponent.Direction = Vector3.left;
@@ -36,7 +42,7 @@ class ProjectileMovableInputSystem : IEcsRunSystem
             if (directionComponent.Direction == Vector3.zero)
             {
                 directionComponent.Direction = _targetPosition - modelComponent.modelTransform.position;
-                directionComponent.Angle = new Vector3(0, 0.5f, 0);
+                angleComponent.Angle = new Vector3(0, 0.5f, 0);
             }
         }
     }

@@ -12,10 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fa49e6632323b340a52f9d39ac483f0, type: 3}
   m_Name: SpawnerConfig 2
   m_EditorClassIdentifier: 
-  _prefab: {fileID: 1612916299682625640, guid: d2d461980277eef4492dbf89d6378731, type: 3}
-  _up: 23
-  _right: 23
-  _left: -23
-  _down: -11
+  _prefab: {fileID: 2495759886331846748, guid: dbd0fddee90f8844dbf88ea3c45fe9bc, type: 3}
   _delay: 1.2
-  _totalTime: 150
+  _timeLimit: 150

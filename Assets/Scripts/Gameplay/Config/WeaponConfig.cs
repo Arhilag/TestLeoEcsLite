@@ -17,6 +17,6 @@ public class WeaponConfig : ScriptableObject
     public float LifeTime => _lifeTime;
     public float IndicationTime;
     public float IndicationDelay;
-    public float Level;
+    public int Level;
 
 }
