@@ -1,18 +1,20 @@
 ﻿using Leopotam.EcsLite;
+using Leopotam.EcsLite.Di;
 using UnityEngine;
 
 sealed class ExperienceSpawnSystem : IEcsRunSystem
 {
-    private EcsWorld _world = null;
+    readonly EcsFilterInject<Inc<DeathComponent,
+        ModelComponent,
+        ExperienceCristalComponent>> _filter = default;
+    readonly EcsPoolInject<ModelComponent> _modelPool = default;
+    readonly EcsPoolInject<ExperienceCristalComponent> _experienceCristalPool = default;
 
     public void Run(EcsSystems systems)
     {
-        _world = systems.GetWorld ();
-        var filter = _world.Filter<DeathComponent>()
-            .Inc<ModelComponent>()
-            .Inc<ExperienceCristalComponent>().End();
-        var modelPool = _world.GetPool<ModelComponent>();
-        var experienceCristalPool = _world.GetPool<ExperienceCristalComponent>();
+        var filter = _filter.Value;
+        var modelPool = _modelPool.Value;
+        var experienceCristalPool = _experienceCristalPool.Value;
         
         foreach (var i in filter)
         {

@@ -1,47 +1,55 @@
 ﻿using LeoEcsPhysics;
 using Leopotam.EcsLite;
-using TMPro;
+using Leopotam.EcsLite.Di;
 using UnityEngine;
-using UnityEngine.UI;
 
 sealed class CollisionSystem : IEcsRunSystem
 {
-    private EcsWorld _world = null;
-    private GameObject _enemyCollisionIn;
-    private GameObject _enemyCollisionOut;
-    private GameObject _playerCollision;
+    readonly EcsFilterInject<Inc<OnTriggerEnterEvent>> _filterEnter = default;
+    readonly EcsPoolInject<OnTriggerEnterEvent> _poolEnter = default;
+    
+    readonly EcsFilterInject<Inc<ProjectileTag,
+        ModelComponent,
+        DamageComponent,
+        LevelComponent>> _projectileFilter = default;
+    readonly EcsFilterInject<Inc<EnemyTag,
+        ModelComponent,
+        HpComponent,
+        DamageComponent,
+        ExperienceCristalComponent>> _enemyFilter = default;
+    readonly EcsFilterInject<Inc<PlayerTag,
+        ModelComponent,
+        HpComponent,
+        ExperienceCounterComponent>> _playerFilter = default;
+    readonly EcsFilterInject<Inc<ExperienceComponent,
+        ModelComponent>> _experienceFilter = default;
+    readonly EcsPoolInject<ModelComponent> _unitPool = default;
+    readonly EcsPoolInject<DamageComponent> _damagePool = default;
+    readonly EcsPoolInject<ExperienceComponent> _experiencePool = default;
+    
+    readonly EcsPoolInject<ProjectileCollisionEnemyComponent> _collisionProjectilePool = default;
+    readonly EcsPoolInject<EnemyCollisionPlayerComponent> _collisionEnemyPool = default;
+    readonly EcsPoolInject<PlayerCollisionExperienceComponent> _collisionPlayerPool = default;
+    
+    readonly EcsPoolInject<DeathComponent> _deathPool = default;
+    
     private GameObject _projectileCollision;
     private GameObject _sender;
     private GameObject _collision;
-    private Slider _hpBar;
-    private TextMeshProUGUI _textCountKills;
-    private int _countKill;
 
     public void Run(EcsSystems systems)
     {
-        _world = systems.GetWorld();
-        var filterEnter = _world.Filter<OnTriggerEnterEvent>().End();
-        var poolEnter = _world.GetPool<OnTriggerEnterEvent>();
-        
-        var projectileFilter = _world.Filter<ProjectileTag>()
-            .Inc<ModelComponent>()
-            .Inc<DamageComponent>()
-            .Inc<LevelComponent>().End();
-        var enemyFilter = _world.Filter<EnemyTag>()
-            .Inc<ModelComponent>()
-            .Inc<HpComponent>()
-            .Inc<DamageComponent>()
-            .Inc<ExperienceCristalComponent>().End();
-        var playerFilter = _world.Filter<PlayerTag>()
-            .Inc<ModelComponent>()
-            .Inc<HpComponent>()
-            .Inc<ExperienceCounterComponent>().End();
-        var experienceFilter = _world.Filter<ExperienceComponent>()
-            .Inc<ModelComponent>().End();
-        
-        var unitPool = _world.GetPool<ModelComponent>();
-        var damagePool = _world.GetPool<DamageComponent>();
-        var experiencePool = _world.GetPool<ExperienceComponent>();
+        var filterEnter = _filterEnter.Value;
+        var poolEnter = _poolEnter.Value;
+
+        var projectileFilter = _projectileFilter.Value;
+        var enemyFilter = _enemyFilter.Value;
+        var playerFilter = _playerFilter.Value;
+        var experienceFilter = _experienceFilter.Value;
+
+        var unitPool = _unitPool.Value;
+        var damagePool = _damagePool.Value;
+        var experiencePool = _experiencePool.Value;
 
         foreach (var entity in filterEnter)
         {
@@ -60,7 +68,7 @@ sealed class CollisionSystem : IEcsRunSystem
                         ref var enemyCollision = ref unitPool.Get(enemy);
                         if (enemyCollision.modelTransform.gameObject == _collision)
                         {
-                            var collisionPool = _world.GetPool<ProjectileCollisionEnemyComponent>();
+                            var collisionPool = _collisionProjectilePool.Value;
                             if (!collisionPool.Has(enemy))
                             {
                                 collisionPool.Add(enemy);
@@ -88,7 +96,7 @@ sealed class CollisionSystem : IEcsRunSystem
                         ref var playerCollision = ref unitPool.Get(player);
                         if (playerCollision.modelTransform.gameObject == _collision)
                         {
-                            var collisionPool = _world.GetPool<EnemyCollisionPlayerComponent>();
+                            var collisionPool = _collisionEnemyPool.Value;
                             if (!collisionPool.Has(player))
                             {
                                 collisionPool.Add(player);
@@ -116,7 +124,7 @@ sealed class CollisionSystem : IEcsRunSystem
                         ref var playerCollision = ref unitPool.Get(player);
                         if (playerCollision.modelTransform.gameObject == _collision)
                         {
-                            var collisionPool = _world.GetPool<PlayerCollisionExperienceComponent>();
+                            var collisionPool = _collisionPlayerPool.Value;
                             if (!collisionPool.Has(player))
                             {
                                 collisionPool.Add(player);
@@ -128,7 +136,7 @@ sealed class CollisionSystem : IEcsRunSystem
                                 ref var collisionEnemyComponent = ref collisionPool.Get(player);
                                 collisionEnemyComponent.Experience += experienceConfig.CristalConfig.Experience;
                             }
-                            var deathPool = _world.GetPool<DeathComponent>();
+                            var deathPool = _deathPool.Value;
                             deathPool.Add(entityExperience);
                         }
                     }

@@ -1,26 +1,31 @@
 ﻿using Leopotam.EcsLite;
+using Leopotam.EcsLite.Di;
 using UnityEngine;
 
 sealed class EndGameSystem : IEcsRunSystem
 {
-    private EcsWorld _world = null;
+    readonly EcsFilterInject<Inc<DeathPlayerComponent>> _filter = default;
+    readonly EcsPoolInject<DeathPlayerComponent> _deathPlayerPool = default;
+    
+    readonly EcsFilterInject<Inc<ViewComponent,
+    UILoseComponent>> _filterViewUI = default;
+    readonly EcsPoolInject<ViewComponent> _poolViewUI = default;
 
     public void Run(EcsSystems systems)
     {
-        _world = systems.GetWorld();
-        var filter = _world.Filter<DeathPlayerComponent>().End();
-        var deathPlayerPool = _world.GetPool<DeathPlayerComponent>();
+        var filter = _filter.Value;
+        var deathPlayerPool = _deathPlayerPool.Value;
         
-        var filterUI = _world.Filter<UIComponent>().End();
-        var poolUI = _world.GetPool<UIComponent>();
+        var filterViewUI = _filterViewUI.Value;
+        var poolViewUI = _poolViewUI.Value;
 
         foreach (var entity in filter)
         {
             Time.timeScale = 0;
-            foreach (var entityUI in filterUI)
+            foreach (var entityUI in filterViewUI)
             {
-                ref var uiPool = ref poolUI.Get(entityUI);
-                uiPool._view_Lose.Show();
+                ref var uiPool = ref poolViewUI.Get(entityUI);
+                uiPool.View.Show();
                 deathPlayerPool.Del(entity);
             }
         }

@@ -1,15 +1,19 @@
 ﻿using Leopotam.EcsLite;
+using Leopotam.EcsLite.Di;
 
 sealed class HpSystem : IEcsRunSystem
 {
-    private EcsWorld _world = null;
-
+    readonly EcsFilterInject<Inc<HpComponent>> _filterHp = default;
+    readonly EcsPoolInject<HpComponent> _poolHp = default;
+    readonly EcsPoolInject<PlayerTag> _poolPlayer = default;
+    readonly EcsPoolInject<DeathPlayerComponent> _deathPlayerPool = default;
+    readonly EcsPoolInject<DeathComponent> _deathPool = default;
+    
     public void Run(EcsSystems systems)
     {
-        _world = systems.GetWorld();
-        var filterHp = _world.Filter<HpComponent>().End();
-        var poolHp = _world.GetPool<HpComponent>();
-        var poolPlayer = _world.GetPool<PlayerTag>();
+        var filterHp = _filterHp.Value;
+        var poolHp = _poolHp.Value;
+        var poolPlayer = _poolPlayer.Value;
 
         foreach (var entity in filterHp)
         {
@@ -18,11 +22,12 @@ sealed class HpSystem : IEcsRunSystem
             {
                 if (poolPlayer.Has(entity))
                 {
-                    var deathPlayerPool = _world.GetPool<DeathPlayerComponent>();
+                    var deathPlayerPool = _deathPlayerPool.Value;
                     deathPlayerPool.Add(entity);
                     break;
                 }
-                var deathPool = _world.GetPool<DeathComponent>();
+
+                var deathPool = _deathPool.Value;
                 deathPool.Add(entity);
             }
         }

@@ -1,20 +1,19 @@
-﻿using LeoEcsPhysics;
-using Leopotam.EcsLite;
-using TMPro;
+﻿using Leopotam.EcsLite;
+using Leopotam.EcsLite.Di;
 using UnityEngine;
-using UnityEngine.UI;
 
 sealed class ExperienceInputSystem : IEcsRunSystem
 {
-    private EcsWorld _world = null;
+    readonly EcsFilterInject<Inc<PlayerCollisionExperienceComponent,
+        ExperienceCounterComponent>> _filterPlayerCollision = default;
+    readonly EcsPoolInject<PlayerCollisionExperienceComponent> _poolPlayerCollision = default;
+    readonly EcsPoolInject<ExperienceCounterComponent> _poolExperienceCounter = default;
     
     public void Run(EcsSystems systems)
     {
-        _world = systems.GetWorld();
-        var filterPlayerCollision = _world.Filter<PlayerCollisionExperienceComponent>()
-            .Inc<ExperienceCounterComponent>().End();
-        var poolPlayerCollision = _world.GetPool<PlayerCollisionExperienceComponent>();
-        var poolExperienceCounter = _world.GetPool<ExperienceCounterComponent>();
+        var filterPlayerCollision = _filterPlayerCollision.Value;
+        var poolPlayerCollision = _poolPlayerCollision.Value;
+        var poolExperienceCounter = _poolExperienceCounter.Value;
 
         foreach (var entity in filterPlayerCollision)
         {

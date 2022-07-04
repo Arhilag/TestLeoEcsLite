@@ -1,22 +1,23 @@
 ﻿using Leopotam.EcsLite;
+using Leopotam.EcsLite.Di;
 
-sealed class HpBarSystem : IEcsRunSystem, IEcsInitSystem
+sealed class HpBarSystem : IEcsRunSystem
 {
-    private EcsWorld _world = null;
+    readonly EcsFilterInject<Inc<PlayerTag,
+        HpComponent>> _timeFilter = default;
+    readonly EcsPoolInject<HpComponent> _timePool = default;
     
-    public void Init(EcsSystems systems)
-    {
-        _world = systems.GetWorld ();
-    }
+    readonly EcsFilterInject<Inc<SliderComponent,
+    HPBarSliderComponent>> _uiFilter = default;
+    readonly EcsPoolInject<SliderComponent> _uiPool = default;
 
     public void Run(EcsSystems systems)
     {
-        var playerFilter = _world.Filter<PlayerTag>()
-            .Inc<HpComponent>().End();
-        var playerHpPool = _world.GetPool<HpComponent>();
-        
-        var uiFilter = _world.Filter<MainUIComponent>().End();
-        var uiPool = _world.GetPool<MainUIComponent>();
+        var playerFilter = _timeFilter.Value;
+        var playerHpPool = _timePool.Value;
+
+        var uiFilter = _uiFilter.Value;
+        var uiPool = _uiPool.Value;
         
         foreach (var entity in playerFilter)
         {
@@ -24,7 +25,7 @@ sealed class HpBarSystem : IEcsRunSystem, IEcsInitSystem
             foreach (var i in uiFilter)
             {
                 ref var uiHp = ref uiPool.Get(i);
-                uiHp.HPbar.value = playerHp.HP / playerHp.MaxHP;
+                uiHp.Slider.value = playerHp.HP / playerHp.MaxHP;
             }
         }
     }

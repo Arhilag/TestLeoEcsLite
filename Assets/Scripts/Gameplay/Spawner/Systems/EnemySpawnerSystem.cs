@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Leopotam.EcsLite;
+using Leopotam.EcsLite.Di;
 using UnityEngine;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
@@ -7,6 +8,31 @@ using Random = UnityEngine.Random;
 sealed class EnemySpawnerSystem : IEcsInitSystem, IEcsRunSystem
 {
     private EcsWorld _world = null;
+    readonly EcsWorldInject _defaultWorld = default;
+    readonly EcsFilterInject<Inc<SpawnEnemySettingsComponent,
+        TransformSpawnSettingsComponent>> _filterSpawner = default;
+    readonly EcsPoolInject<SpawnEnemySettingsComponent> _poolSpawnEnemySetting = default;
+    readonly EcsPoolInject<TransformSpawnSettingsComponent> _poolSpawnTransformSetting = default;
+    
+    readonly EcsFilterInject<Inc<PlayerTag,
+        ModelComponent>> _filterPlayer = default;
+    readonly EcsPoolInject<ModelComponent> _player = default;
+    
+    readonly EcsFilterInject<Inc<GlobalTimeComponent>> _timeFilter = default;
+    readonly EcsPoolInject<GlobalTimeComponent> _timePool = default;
+    
+    readonly EcsFilterInject<Inc<EnemyTag,
+        ModelComponent,
+        SpeedComponent,
+        HpComponent,
+        DamageComponent,
+        ExperienceCristalComponent>> _enemyFilter = default;
+    readonly EcsPoolInject<ModelComponent> _enemyPool = default;
+    readonly EcsPoolInject<SpeedComponent> _enemySpeedPool = default;
+    readonly EcsPoolInject<HpComponent> _enemyHpPool = default;
+    readonly EcsPoolInject<DamageComponent> _enemyDamagePool = default;
+    readonly EcsPoolInject<ExperienceCristalComponent> _enemyExperienceCristalPool = default;
+    
     private Transform _playerTransform;
     private SettingEnemySpawn _config;
     private SettingEnemySpawn[] _configs;
@@ -24,16 +50,15 @@ sealed class EnemySpawnerSystem : IEcsInitSystem, IEcsRunSystem
     {
         _world = systems.GetWorld ();
 
-        var filterSpawner = _world.Filter<SpawnEnemySettingsComponent>()
-            .Inc<TransformSpawnSettingsComponent>().End();
-        var poolSpawnTransformSetting = _world.GetPool<TransformSpawnSettingsComponent>();
-        var poolSpawnEnemySetting = _world.GetPool<SpawnEnemySettingsComponent>();
-        
-        var filterPlayer = _world.Filter<ModelComponent>().Inc<PlayerTag>().End();
-        var player = _world.GetPool<ModelComponent>();
-        
-        var timeFilter = _world.Filter<GlobalTimeComponent>().End();
-        var timePool = _world.GetPool<GlobalTimeComponent>();
+        var filterSpawner = _filterSpawner.Value;
+        var poolSpawnTransformSetting = _poolSpawnTransformSetting.Value;
+        var poolSpawnEnemySetting = _poolSpawnEnemySetting.Value;
+
+        var filterPlayer = _filterPlayer.Value;
+        var player = _player.Value;
+
+        var timeFilter = _timeFilter.Value;
+        var timePool = _timePool.Value;
         
         foreach (var i in filterSpawner)
         {
@@ -90,20 +115,15 @@ sealed class EnemySpawnerSystem : IEcsInitSystem, IEcsRunSystem
 
         if (obj)
         {
-            var enemyFilter = _world.Filter<EnemyTag>()
-                .Inc<ModelComponent>()
-                .Inc<SpeedComponent>()
-                .Inc<HpComponent>()
-                .Inc<DamageComponent>()
-                .Inc<ExperienceCristalComponent>().End();
-            var enemyPool = _world.GetPool<ModelComponent>();
-            var enemySpeedPool = _world.GetPool<SpeedComponent>();
-            var enemyHpPool = _world.GetPool<HpComponent>();
-            var enemyDamagePool = _world.GetPool<DamageComponent>();
-            var enemyExperienceCristalPool = _world.GetPool<ExperienceCristalComponent>();
-            
-            var filterSpawner = _world.Filter<SpawnEnemySettingsComponent>().End();
-            var poolSpawnEnemySetting = _world.GetPool<SpawnEnemySettingsComponent>();
+            var enemyFilter = _enemyFilter.Value;
+            var enemyPool = _enemyPool.Value;
+            var enemySpeedPool = _enemySpeedPool.Value;
+            var enemyHpPool = _enemyHpPool.Value;
+            var enemyDamagePool = _enemyDamagePool.Value;
+            var enemyExperienceCristalPool = _enemyExperienceCristalPool.Value;
+
+            var filterSpawner = _filterSpawner.Value;
+            var poolSpawnEnemySetting = _poolSpawnEnemySetting.Value;
             
             foreach (var i in enemyFilter)
             {

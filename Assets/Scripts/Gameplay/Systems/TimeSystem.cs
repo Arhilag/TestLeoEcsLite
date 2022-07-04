@@ -1,19 +1,21 @@
 ﻿using Leopotam.EcsLite;
-using TMPro;
+using Leopotam.EcsLite.Di;
 using UnityEngine;
-using UnityEngine.UI;
 
 sealed class TimeSystem : IEcsRunSystem, IEcsInitSystem
 {
     private EcsWorld _world = null;
-    // private GlobalTimeComponent _globalTime;
+    readonly EcsWorldInject _defaultWorld = default;
+    readonly EcsFilterInject<Inc<GlobalTimeComponent>> _timeFilter = default;
+    readonly EcsPoolInject<GlobalTimeComponent> _timePool = default;
+
     
     public void Init(EcsSystems systems)
     {
-        _world = systems.GetWorld ();
-        
-        var timeFilter = _world.Filter<GlobalTimeComponent>().End();
-        var timePool = _world.GetPool<GlobalTimeComponent>();
+        _world = _defaultWorld.Value;
+
+        var timeFilter = _timeFilter.Value;
+        var timePool = _timePool.Value;
         
         foreach (var i in timeFilter)
         {
@@ -24,8 +26,8 @@ sealed class TimeSystem : IEcsRunSystem, IEcsInitSystem
     
     public void Run(EcsSystems systems)
     {
-        var timeFilter = _world.Filter<GlobalTimeComponent>().End();
-        var timePool = _world.GetPool<GlobalTimeComponent>();
+        var timeFilter = _timeFilter.Value;
+        var timePool = _timePool.Value;
         
         foreach (var i in timeFilter)
         {

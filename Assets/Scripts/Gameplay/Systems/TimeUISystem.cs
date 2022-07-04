@@ -1,29 +1,31 @@
 ﻿using Leopotam.EcsLite;
-using TMPro;
-using UnityEngine;
-using UnityEngine.UI;
+using Leopotam.EcsLite.Di;
 
 sealed class TimeUISystem : IEcsRunSystem
 {
-    private EcsWorld _world = null;
+    readonly EcsFilterInject<Inc<GlobalTimeComponent>> _timeFilter = default;
+    readonly EcsPoolInject<GlobalTimeComponent> _timePool = default;
+
+    readonly EcsFilterInject<Inc<TextComponent,
+    UITimeComponent>> _uiTextFilter = default;
+    readonly EcsPoolInject<TextComponent> _uitextPool = default;
+    
     public void Run(EcsSystems systems)
     {
-        _world = systems.GetWorld();
-        var timeFilter = _world.Filter<GlobalTimeComponent>().End();
-        var timePool = _world.GetPool<GlobalTimeComponent>();
-
-        var uiFilter = _world.Filter<MainUIComponent>().Inc<UIComponent>()
-            .Inc<LevelButtonComponent>().End();
-        var uiPool = _world.GetPool<MainUIComponent>();
+        var timeFilter = _timeFilter.Value;
+        var timePool = _timePool.Value;
+        
+        var uiTextFilter = _uiTextFilter.Value;
+        var uiTextPool = _uitextPool.Value;
         
         foreach (var i in timeFilter)
         {
             ref var globalTime = ref timePool.Get(i);
-            foreach (var entity in uiFilter)
+            foreach (var j in uiTextFilter)
             {
-                ref var uiPoolComponent = ref uiPool.Get(entity);
                 var minute = (int) globalTime.GlobalTime / 60;
-                uiPoolComponent.Text_time.text = minute + ":" + ((int)globalTime.GlobalTime-minute*60);
+                ref var uiTextComponent = ref uiTextPool.Get(j);
+                uiTextComponent.Text.text = minute + ":" + ((int)globalTime.GlobalTime-minute*60);
             }
         }
     }

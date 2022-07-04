@@ -1,19 +1,22 @@
 ﻿using Leopotam.EcsLite;
+using Leopotam.EcsLite.Di;
 using UnityEngine;
 
 sealed class MovementSystem : IEcsRunSystem
 {
-    private EcsWorld _world = null;
-
+    readonly EcsFilterInject<Inc<DirectionComponent,
+        ModelComponent,
+        SpeedComponent>> _filter = default;
+    readonly EcsPoolInject<DirectionComponent> _directionC = default;
+    readonly EcsPoolInject<ModelComponent> _model = default;
+    readonly EcsPoolInject<SpeedComponent> _speedPool = default;
+    
     public void Run(EcsSystems systems)
     {
-        _world = systems.GetWorld ();
-        var filter = _world.Filter<DirectionComponent>()
-            .Inc<ModelComponent>()
-            .Inc<SpeedComponent>().End();
-        var directionC = _world.GetPool<DirectionComponent>();
-        var model = _world.GetPool<ModelComponent>();
-        var speedPool = _world.GetPool<SpeedComponent>();
+        var filter = _filter.Value;
+        var directionC = _directionC.Value;
+        var model = _model.Value;
+        var speedPool = _speedPool.Value;
         
         foreach (var i in filter)
         {

@@ -1,5 +1,6 @@
 ﻿using System;
 using Leopotam.EcsLite;
+using Leopotam.EcsLite.Di;
 using Object = UnityEngine.Object;
 
 sealed class DeathSystem : IEcsRunSystem
@@ -7,13 +8,17 @@ sealed class DeathSystem : IEcsRunSystem
     private EcsWorld _world = null;
     public static Action OnEnemyDead;
 
+    readonly EcsFilterInject<Inc<DeathComponent,
+        ModelComponent>> _filter = default;
+    readonly EcsPoolInject<ModelComponent> _modelPool = default;
+    readonly EcsPoolInject<EnemyTag> _enemyPool = default;
+    
     public void Run(EcsSystems systems)
     {
         _world = systems.GetWorld ();
-        var filter = _world.Filter<DeathComponent>()
-            .Inc<ModelComponent>().End();
-        var modelPool = _world.GetPool<ModelComponent>();
-        var enemyPool = _world.GetPool<EnemyTag>();
+        var filter = _filter.Value;
+        var modelPool = _modelPool.Value;
+        var enemyPool = _enemyPool.Value;
         
         foreach (var i in filter)
         {

@@ -1,38 +1,52 @@
 ﻿using System.Collections.Generic;
 using Leopotam.EcsLite;
+using Leopotam.EcsLite.Di;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
 sealed class AutoShootingSystem : IEcsRunSystem, IEcsInitSystem
 {
     private EcsWorld _world;
-    private EcsFilter _filter;
+    
+    readonly EcsWorldInject _defaultWorld = default;
+    
+    readonly EcsFilterInject<Inc<PlayerTag,
+        WeaponComponent,
+        ModelComponent>> _filter = default;
+    readonly EcsPoolInject<WeaponComponent> _weaponEquip = default;
+    readonly EcsPoolInject<ModelComponent> _modelEquip = default;
+    
+    readonly EcsFilterInject<Inc<WeaponContainerComponent>> _filterWeaponContainer = default;
+    readonly EcsPoolInject<WeaponContainerComponent> _poolWeaponContainer = default;
+    
+    readonly EcsFilterInject<Inc<ProjectileTag,
+        ModelComponent,
+        SpeedComponent,
+        LifeTimeComponent,
+        DamageComponent,
+        LevelComponent>> _filterProjectile = default;
+    readonly EcsPoolInject<ModelComponent> _poolProjectileModel = default;
+    readonly EcsPoolInject<SpeedComponent> _poolProjectileSpeed = default;
+    readonly EcsPoolInject<LifeTimeComponent> _poolProjectileLifeTime = default;
+    readonly EcsPoolInject<DamageComponent> _poolProjectileDamage = default;
+    readonly EcsPoolInject<LevelComponent> _poolProjectileLevel = default;
+    
     private List<int> _queue = new List<int>();
     GameObject obj = null;
 
     public void Init(EcsSystems systems)
     {
-        _world = systems.GetWorld ();
-        // _filter = _world.Filter<WeaponComponent>().Inc<ModelComponent>().Inc<PlayerTag>().End();
-        // var weaponEquip = _world.GetPool<WeaponComponent>();
-        // foreach (var i in _filter)
-        // {
-        //     ref var weaponComponent = ref weaponEquip.Get(i);
-        //     foreach (var weaponConfig in weaponComponent.Weapons)
-        //     {
-        //         weaponConfig.IndicationDelay = 0;
-        //     }
-        // }
+        _world = _defaultWorld.Value;
     }
     
     public void Run(EcsSystems systems)
     {
-        _filter = _world.Filter<WeaponComponent>().Inc<ModelComponent>().Inc<PlayerTag>().End();
-        var weaponEquip = _world.GetPool<WeaponComponent>();
-        var modelEquip = _world.GetPool<ModelComponent>();
-        var filterWeaponContainer = _world.Filter<WeaponContainerComponent>().End();
-        var poolWeaponContainer = _world.GetPool<WeaponContainerComponent>();
-        foreach (var i in _filter)
+        var filter = _filter.Value;
+        var weaponEquip = _weaponEquip.Value;
+        var modelEquip = _modelEquip.Value;
+        var filterWeaponContainer = _filterWeaponContainer.Value;
+        var poolWeaponContainer = _poolWeaponContainer.Value;
+        foreach (var i in filter)
         {
             ref var weaponComponent = ref weaponEquip.Get(i);
             ref var modelComponent = ref modelEquip.Get(i);
@@ -49,8 +63,6 @@ sealed class AutoShootingSystem : IEcsRunSystem, IEcsInitSystem
                         {
                             weaponContainer.Weapons[k].CountingTime = 0;
                             _queue.Add(k);
-                            // Object.Instantiate(weaponContainer.Weapons[k].Projectile,
-                            //     modelComponent.modelTransform.position, modelComponent.modelTransform.rotation);
                         }
                     }
                 }
@@ -63,17 +75,12 @@ sealed class AutoShootingSystem : IEcsRunSystem, IEcsInitSystem
 
                 if (obj)
                 {
-                    var filterProjectile = _world.Filter<ProjectileTag>()
-                        .Inc<ModelComponent>()
-                        .Inc<SpeedComponent>()
-                        .Inc<LifeTimeComponent>()
-                        .Inc<DamageComponent>()
-                        .Inc<LevelComponent>().End();
-                    var poolProjectileModel = _world.GetPool<ModelComponent>();
-                    var poolProjectileSpeed = _world.GetPool<SpeedComponent>();
-                    var poolProjectileLifeTime = _world.GetPool<LifeTimeComponent>();
-                    var poolProjectileDamage = _world.GetPool<DamageComponent>();
-                    var poolProjectileLevel = _world.GetPool<LevelComponent>();
+                    var filterProjectile = _filterProjectile.Value;
+                    var poolProjectileModel = _poolProjectileModel.Value;
+                    var poolProjectileSpeed = _poolProjectileSpeed.Value;
+                    var poolProjectileLifeTime = _poolProjectileLifeTime.Value;
+                    var poolProjectileDamage = _poolProjectileDamage.Value;
+                    var poolProjectileLevel = _poolProjectileLevel.Value;
                     foreach (var l in filterProjectile)
                     {
                         ref var modelProjectileComponent = ref poolProjectileModel.Get(l);

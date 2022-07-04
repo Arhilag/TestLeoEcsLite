@@ -1,13 +1,45 @@
 ﻿using Leopotam.EcsLite;
-using TMPro;
+using Leopotam.EcsLite.Di;
 using UnityEngine;
 using UnityEngine.UI;
 
 sealed class LevelSystem : IEcsInitSystem, IEcsDestroySystem, IEcsRunSystem
 {
-    private EcsWorld _world = null;
-    private ExperienceConfig _experienceConfig;
-    private int _lvlNumber;
+    readonly EcsFilterInject<Inc<PlayerTag,
+        WeaponComponent>> _playerFilter = default;
+    readonly EcsPoolInject<WeaponComponent> _weaponPool = default;
+    
+    readonly EcsFilterInject<Inc<ButtonComponent, UIWeapon1Component>> _buttonWeapon1Filter = default;
+    readonly EcsFilterInject<Inc<ButtonComponent, UIWeapon2Component>> _buttonWeapon2Filter = default;
+    readonly EcsFilterInject<Inc<ButtonComponent, UIWeapon3Component>> _buttonWeapon3Filter = default;
+    readonly EcsPoolInject<ButtonComponent> _buttonWeaponPool = default;
+    
+    readonly EcsFilterInject<Inc<TextComponent, UIWeapon1Component>> _textWeapon1Filter = default;
+    readonly EcsFilterInject<Inc<TextComponent, UIWeapon2Component>> _textWeapon2Filter = default;
+    readonly EcsFilterInject<Inc<TextComponent, UIWeapon3Component>> _textWeapon3Filter = default;
+    readonly EcsPoolInject<TextComponent> _textWeaponPool = default;
+    
+    readonly EcsFilterInject<Inc<ViewComponent,
+    UILevelUpComponent>> _uiLevelUpFilter = default;
+    readonly EcsPoolInject<ViewComponent> _uiLevelUpPool = default;
+    
+    readonly EcsFilterInject<Inc<ViewComponent,
+        UIWinComponent>> _uiWinFilter = default;
+    readonly EcsPoolInject<ViewComponent> _uiWinPool = default;
+    
+    readonly EcsFilterInject<Inc<GlobalTimeComponent>> _timeFilter = default;
+    readonly EcsPoolInject<GlobalTimeComponent> _timePool = default;
+    
+    readonly EcsFilterInject<Inc<IconComponent,
+    CubeComponent>> _cubeIconFilter = default;
+    readonly EcsFilterInject<Inc<IconComponent,
+        BallComponent>> _ballIconFilter = default;
+    readonly EcsFilterInject<Inc<IconComponent,
+        ThreeComponent>> _threeIconFilter = default;
+    readonly EcsFilterInject<Inc<IconComponent,
+        TComponent>> _tIconFilter = default;
+    readonly EcsPoolInject<IconComponent> _iconPool = default;
+
     private string _firstWeapon;
     private string _secondWeapon;
     private string _thirdWeapon;
@@ -16,17 +48,14 @@ sealed class LevelSystem : IEcsInitSystem, IEcsDestroySystem, IEcsRunSystem
     public void Init(EcsSystems systems)
     {
         LevelUISystem.OnLevelUp += LevelUp;
-        _world = systems.GetWorld ();
-        
-        var playerFilter = _world.Filter<PlayerTag>()
-            .Inc<PlayerExperienceComponent>()
-            .Inc<WeaponComponent>()
-            .Inc<ExperienceCounterComponent>().End();
-        var weaponPool = _world.GetPool<WeaponComponent>();
-        
-        var UIFilter = _world.Filter<MainUIComponent>().Inc<UIComponent>()
-            .Inc<LevelButtonComponent>().End();
-        var LevelButton = _world.GetPool<LevelButtonComponent>();
+
+        var playerFilter = _playerFilter.Value;
+        var weaponPool = _weaponPool.Value;
+
+        var buttonWeapon1Filter = _buttonWeapon1Filter.Value;
+        var buttonWeapon2Filter = _buttonWeapon2Filter.Value;
+        var buttonWeapon3Filter = _buttonWeapon3Filter.Value;
+        var buttonWeaponPool = _buttonWeaponPool.Value;
 
         foreach (var entity in playerFilter)
         {
@@ -38,12 +67,20 @@ sealed class LevelSystem : IEcsInitSystem, IEcsDestroySystem, IEcsRunSystem
             }
         }
 
-        foreach (var entity in UIFilter)
+        foreach (var entity in buttonWeapon1Filter)
         {
-            ref var levelButtons = ref LevelButton.Get(entity);
-            levelButtons.Button_weapon_1.onClick.AddListener(ClickOne);
-            levelButtons.Button_weapon_2.onClick.AddListener(ClickTwo);
-            levelButtons.Button_weapon_3.onClick.AddListener(ClickThree);
+            ref var levelButtons = ref buttonWeaponPool.Get(entity);
+            levelButtons.Button.onClick.AddListener(ClickOne);
+        }
+        foreach (var entity in buttonWeapon2Filter)
+        {
+            ref var levelButtons = ref buttonWeaponPool.Get(entity);
+            levelButtons.Button.onClick.AddListener(ClickTwo);
+        }
+        foreach (var entity in buttonWeapon3Filter)
+        {
+            ref var levelButtons = ref buttonWeaponPool.Get(entity);
+            levelButtons.Button.onClick.AddListener(ClickThree);
         }
 
         UpdateIcons();
@@ -72,9 +109,8 @@ sealed class LevelSystem : IEcsInitSystem, IEcsDestroySystem, IEcsRunSystem
 
     private void LevelUpWeapon(string weaponName)
     {
-        var playerFilter = _world.Filter<PlayerTag>()
-            .Inc<WeaponComponent>().End();
-        var weaponPool = _world.GetPool<WeaponComponent>();
+        var playerFilter = _playerFilter.Value;
+        var weaponPool = _weaponPool.Value;
         foreach (var i in playerFilter)
         {
             ref var weaponLevels = ref weaponPool.Get(i);
@@ -90,42 +126,66 @@ sealed class LevelSystem : IEcsInitSystem, IEcsDestroySystem, IEcsRunSystem
 
     private void UpdateIcons()
     {
-        var uiFilter = _world.Filter<MainUIComponent>().Inc<UIComponent>()
-            .Inc<LevelButtonComponent>().End();
-        var uiPool = _world.GetPool<MainUIComponent>();
-        foreach (var entity in uiFilter)
+        Image[] icons = new Image[4];
+        var cubeIconFilter = _cubeIconFilter.Value;
+        var ballIconFilter = _ballIconFilter.Value;
+        var threeIconFilter = _threeIconFilter.Value;
+        var tIconFilter = _tIconFilter.Value;
+        var iconPool = _iconPool.Value;
+        foreach (var n in cubeIconFilter)
         {
-            ref var ui = ref uiPool.Get(entity);
-            Image[] icons = new Image[4] 
-            {ui.IconCube, ui.IconBall, 
-                ui.IconThree, ui.IconT};
-            for (var i = 0; i < _playerWeapons.LevelSettings.Length; i++)
+            ref var icon = ref iconPool.Get(n);
+            icons[0] = icon.Icon;
+        }
+        foreach (var j in ballIconFilter)
+        {
+            ref var icon = ref iconPool.Get(j);
+            icons[1] = icon.Icon;
+        }
+        foreach (var k in threeIconFilter)
+        {
+            ref var icon = ref iconPool.Get(k);
+            icons[2] = icon.Icon;
+        }
+        foreach (var m in tIconFilter)
+        {
+            ref var icon = ref iconPool.Get(m);
+            icons[3] = icon.Icon;
+        }
+        foreach (var icon in icons)
+        {
+            icon.gameObject.SetActive(false);
+        }
+        for (var i = 0; i < _playerWeapons.LevelSettings.Length; i++)
+        {
+            Debug.Log(_playerWeapons.LevelSettings[i].Level);
+            if (_playerWeapons.LevelSettings[i].Level > 0)
             {
-                Debug.Log(_playerWeapons.LevelSettings[i].Level);
-                if (_playerWeapons.LevelSettings[i].Level > 0)
-                {
-                    icons[i].gameObject.SetActive(true);
-                }
+                icons[i].gameObject.SetActive(true);
             }
         }
     }
 
     public void LevelUp()
     {
-        var playerFilter = _world.Filter<PlayerTag>()
-            .Inc<WeaponComponent>().End();
-        var weaponPool = _world.GetPool<WeaponComponent>();
+        var playerFilter = _playerFilter.Value;
+        var weaponPool = _weaponPool.Value;
 
-        var UIFilter = _world.Filter<UIComponent>().End();
-        var UIviews = _world.GetPool<UIComponent>();
+        var uiLevelUpFilter = _uiLevelUpFilter.Value;
+        var uiLevelUpPool = _uiLevelUpPool.Value;
+        
+        var textWeapon1Filter = _textWeapon1Filter.Value;
+        var textWeapon2Filter = _textWeapon2Filter.Value;
+        var textWeapon3Filter = _textWeapon3Filter.Value;
+        var levelButtonPool = _textWeaponPool.Value;
         
         foreach (var i in playerFilter)
         {
             ref var weaponLevels = ref  weaponPool.Get(i);
-            foreach (var entity in UIFilter)
+            foreach (var entity in uiLevelUpFilter)
             {
-                ref var uiViewsComponent = ref  UIviews.Get(entity);
-                uiViewsComponent._view_LevelUp.Show();
+                ref var uiViewsComponent = ref  uiLevelUpPool.Get(entity);
+                uiViewsComponent.View.Show();
             }
             Time.timeScale = 0;
                 
@@ -150,38 +210,41 @@ sealed class LevelSystem : IEcsInitSystem, IEcsDestroySystem, IEcsRunSystem
                     _thirdWeapon = weapon.Name;
             }
 
-            var uiFilter = _world.Filter<MainUIComponent>().Inc<UIComponent>()
-                .Inc<LevelButtonComponent>().End();
-            var levelButton = _world.GetPool<LevelButtonComponent>();
-
-            foreach (var entity in uiFilter)
+            foreach (var entity in textWeapon1Filter)
             {
-                ref var levelButtons = ref levelButton.Get(entity);
-                levelButtons.Text_weapon_1.text = _firstWeapon;
-                levelButtons.Text_weapon_2.text = _secondWeapon;
-                levelButtons.Text_weapon_3.text = _thirdWeapon;
+                ref var levelButtons = ref levelButtonPool.Get(entity);
+                levelButtons.Text.text = _firstWeapon;
+            }
+            foreach (var entity in textWeapon2Filter)
+            {
+                ref var levelButtons = ref levelButtonPool.Get(entity);
+                levelButtons.Text.text = _secondWeapon;
+            }
+            foreach (var entity in textWeapon3Filter)
+            {
+                ref var levelButtons = ref levelButtonPool.Get(entity);
+                levelButtons.Text.text = _thirdWeapon;
             }
         }
     }
 
     public void Run(EcsSystems systems)
     {
-        var timeFilter = _world.Filter<GlobalTimeComponent>().End();
-        var timePool = _world.GetPool<GlobalTimeComponent>();
+        var timeFilter = _timeFilter.Value;
+        var timePool = _timePool.Value;
 
-        var uiFilter = _world.Filter<MainUIComponent>().Inc<UIComponent>()
-            .Inc<LevelButtonComponent>().End();
-        var uiPool = _world.GetPool<UIComponent>();
+        var uiWinFilter = _uiWinFilter.Value;
+        var uiWinPool = _uiWinPool.Value;
         
         foreach (var i in timeFilter)
         {
             ref var globalTime = ref timePool.Get(i);
             if (globalTime.GlobalTime >= globalTime.TimeLimit)
             {
-                foreach (var entity in uiFilter)
+                foreach (var entity in uiWinFilter)
                 {
-                    ref var uiPoolComponent = ref uiPool.Get(entity);
-                    uiPoolComponent._view_Win.Show();
+                    ref var uiPoolComponent = ref uiWinPool.Get(entity);
+                    uiPoolComponent.View.Show();
                     Time.timeScale = 0;
                 }
             }

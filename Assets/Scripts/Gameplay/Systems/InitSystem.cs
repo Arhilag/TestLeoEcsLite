@@ -1,51 +1,78 @@
 ﻿using Leopotam.EcsLite;
+using Leopotam.EcsLite.Di;
 using UnityEngine;
 
 class InitSystem : IEcsInitSystem
 {
-    private EcsWorld world = null;
+    readonly EcsWorldInject _defaultWorld = default;
+    
+    readonly EcsFilterInject<Inc<SpawnerConfigComponent, 
+        TransformSpawnerConfigComponent, 
+        TimeLimitLevelConfigComponent,
+        EnemySpeedConfigComponent,
+        PlayerConfigComponent,
+        WeaponConfigComponent,
+        PlayerExperienceConfigComponent>> _filterConfig = default;
+    readonly EcsPoolInject<SpawnerConfigComponent> _poolEnemyConfig = default;
+    readonly EcsPoolInject<TransformSpawnerConfigComponent> _poolTransformConfig = default;
+    readonly EcsPoolInject<TimeLimitLevelConfigComponent> _poolLimitLevelConfig = default;
+    readonly EcsPoolInject<EnemySpeedConfigComponent> _poolEnemySpeedConfig = default;
+    readonly EcsPoolInject<PlayerConfigComponent> _poolPlayerSpeedConfig = default;
+    readonly EcsPoolInject<WeaponConfigComponent> _poolWeaponConfig = default;
+    readonly EcsPoolInject<PlayerExperienceConfigComponent> _poolPlayerExperienceConfig = default;
+    
+    readonly EcsFilterInject<Inc<SpawnEnemySettingsComponent, 
+        TransformSpawnSettingsComponent>> _filterSpawner = default;
+    readonly EcsPoolInject<SpawnEnemySettingsComponent> _poolSpawnEnemySetting = default;
+    readonly EcsPoolInject<TransformSpawnSettingsComponent> _poolSpawnTransformSetting = default;
+    
+    readonly EcsFilterInject<Inc<GlobalTimeComponent>> _timeFilter = default;
+    readonly EcsPoolInject<GlobalTimeComponent> _timePool = default;
+    
+    readonly EcsFilterInject<Inc<SpeedComponent, 
+        PlayerTag,
+        HpComponent, 
+        WeaponComponent,
+        PlayerExperienceComponent>> _playerFilter = default;
+    readonly EcsPoolInject<SpeedComponent> _playerSpeedPool = default;
+    readonly EcsPoolInject<HpComponent> _playerHpPool = default;
+    readonly EcsPoolInject<WeaponComponent> _playerWeaponPool = default;
+    readonly EcsPoolInject<PlayerExperienceComponent> _playerExperiencePool = default;
+    
+    readonly EcsFilterInject<Inc<WeaponContainerComponent>> _weaponContainerFilter = default;
+    readonly EcsPoolInject<WeaponContainerComponent> _weaponContainerPool = default;
+    
     private TransformSpawnerConfig _transformConfig;
     private SpawnerConfig[] _enemyConfigs;
     
     public void Init(EcsSystems systems)
     {
         Time.timeScale = 1;
-        world = systems.GetWorld ();
-        var filterConfig = world.Filter<SpawnerConfigComponent>()
-            .Inc<TransformSpawnerConfigComponent>()
-            .Inc<TimeLimitLevelConfigComponent>()
-            .Inc<EnemySpeedConfigComponent>()
-            .Inc<PlayerConfigComponent>()
-            .Inc<WeaponConfigComponent>()
-            .Inc<PlayerExperienceConfigComponent>().End();
-        var poolEnemyConfig = world.GetPool<SpawnerConfigComponent>();
-        var poolTransformConfig = world.GetPool<TransformSpawnerConfigComponent>();
-        var poolLimitLevelConfig = world.GetPool<TimeLimitLevelConfigComponent>();
-        var poolEnemySpeedConfig = world.GetPool<EnemySpeedConfigComponent>();
-        var poolPlayerSpeedConfig = world.GetPool<PlayerConfigComponent>();
-        var poolWeaponConfig = world.GetPool<WeaponConfigComponent>();
-        var poolPlayerExperienceConfig = world.GetPool<PlayerExperienceConfigComponent>();
-        
-        var filterSpawner = world.Filter<SpawnEnemySettingsComponent>()
-            .Inc<TransformSpawnSettingsComponent>().End();
-        var poolSpawnEnemySetting = world.GetPool<SpawnEnemySettingsComponent>();
-        var poolSpawnTransformSetting = world.GetPool<TransformSpawnSettingsComponent>();
-        
-        var timeFilter = world.Filter<GlobalTimeComponent>().End();
-        var timePool = world.GetPool<GlobalTimeComponent>();
-        
-        var playerFilter = world.Filter<SpeedComponent>()
-            .Inc<PlayerTag>()
-            .Inc<HpComponent>()
-            .Inc<WeaponComponent>()
-            .Inc<PlayerExperienceComponent>().End();
-        var playerSpeedPool = world.GetPool<SpeedComponent>();
-        var playerHpPool = world.GetPool<HpComponent>();
-        var playerWeaponPool = world.GetPool<WeaponComponent>();
-        var playerExperiencePool = world.GetPool<PlayerExperienceComponent>();
-        
-        var weaponContainerFilter = world.Filter<WeaponContainerComponent>().End();
-        var weaponContainerPool = world.GetPool<WeaponContainerComponent>();
+        var world = _defaultWorld.Value;
+        var filterConfig = _filterConfig.Value;
+        var poolEnemyConfig = _poolEnemyConfig.Value;
+        var poolTransformConfig = _poolTransformConfig.Value;
+        var poolLimitLevelConfig = _poolLimitLevelConfig.Value;
+        var poolEnemySpeedConfig = _poolEnemySpeedConfig.Value;
+        var poolPlayerSpeedConfig = _poolPlayerSpeedConfig.Value;
+        var poolWeaponConfig = _poolWeaponConfig.Value;
+        var poolPlayerExperienceConfig = _poolPlayerExperienceConfig.Value;
+
+        var filterSpawner = _filterSpawner.Value;
+        var poolSpawnEnemySetting = _poolSpawnEnemySetting.Value;
+        var poolSpawnTransformSetting = _poolSpawnTransformSetting.Value;
+
+        var timeFilter = _timeFilter.Value;
+        var timePool = _timePool.Value;
+
+        var playerFilter = _playerFilter.Value;
+        var playerSpeedPool = _playerSpeedPool.Value;
+        var playerHpPool = _playerHpPool.Value;
+        var playerWeaponPool = _playerWeaponPool.Value;
+        var playerExperiencePool = _playerExperiencePool.Value;
+
+        var weaponContainerFilter = _weaponContainerFilter.Value;
+        var weaponContainerPool = _weaponContainerPool.Value;
 
         foreach (var i in filterSpawner)
         {
@@ -83,8 +110,6 @@ class InitSystem : IEcsInitSystem
                     enemySetting[j].HP = configEnemySpeedComponent.SpeedConfig[j].HP;
                     enemySetting[j].ExperienceCrystal = configEnemySpeedComponent.SpeedConfig[j].ExperienceCrystal;
                 }
-                // poolEnemyConfig.Del(i);
-                // poolTransformConfig.Del(i);
                 
                 foreach (var l in timeFilter)
                 {
@@ -128,6 +153,8 @@ class InitSystem : IEcsInitSystem
                         weaponContainer.Weapons[j].LifeTime = configWeaponComponent.WeaponConfigs[j].LifeTime;
                     }
                 }
+                
+                world.DelEntity(k);
             }
         }
     }

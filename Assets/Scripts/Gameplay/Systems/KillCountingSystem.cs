@@ -1,14 +1,22 @@
 ﻿using Leopotam.EcsLite;
+using Leopotam.EcsLite.Di;
 
 sealed class KillCountingSystem : IEcsRunSystem, IEcsInitSystem, IEcsDestroySystem
 {
-    private EcsWorld _world = null;
-    private int _countKill;
+    readonly EcsFilterInject<Inc<KillCounterComponent>> _killCounterFilter = default;
+    readonly EcsPoolInject<KillCounterComponent> _killCounterPool = default;
+    
+    readonly EcsFilterInject<Inc<TextComponent,
+    UIKillsComponent>> _uiTextFilter = default;
+    readonly EcsPoolInject<TextComponent> _uiTextPool = default;
     
     public void Init(EcsSystems systems)
     {
-        _world = systems.GetWorld ();
-        _countKill = 0;
+        foreach (var entity in _killCounterFilter.Value)
+        {
+            ref var killCounterComponent = ref _killCounterPool.Value.Get(entity);
+            killCounterComponent.countKill = 0;
+        }
         DeathSystem.OnEnemyDead += NewEnemyDead;
     }
 
@@ -19,18 +27,29 @@ sealed class KillCountingSystem : IEcsRunSystem, IEcsInitSystem, IEcsDestroySyst
 
     public void Run(EcsSystems systems)
     {
-        var uiFilter = _world.Filter<MainUIComponent>().End();
-        var uiPool = _world.GetPool<MainUIComponent>();
+        var uiTextFilter = _uiTextFilter.Value;
+        var killCounterPool = _killCounterPool.Value;
         
-        foreach (var entity in uiFilter)
+        var killCounterFilter = _killCounterFilter.Value;
+        var uiTextPool = _uiTextPool.Value;
+        
+        foreach (var entity in uiTextFilter)
         {
-            ref var uiComponent = ref uiPool.Get(entity);
-            uiComponent.Text_countKill.text = _countKill +"";
+            ref var uiComponent = ref uiTextPool.Get(entity);
+            foreach (var i in killCounterFilter)
+            {
+                ref var killCounterComponent = ref killCounterPool.Get(i);
+                uiComponent.Text.text = killCounterComponent.countKill +"";
+            }
         }
     }
 
     private void NewEnemyDead()
     {
-        _countKill++;
+        foreach (var entity in _killCounterFilter.Value)
+        {
+            ref var killCounterComponent = ref _killCounterPool.Value.Get(entity);
+            killCounterComponent.countKill++;
+        }
     }
 }

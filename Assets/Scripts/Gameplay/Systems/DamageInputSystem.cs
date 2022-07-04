@@ -1,27 +1,25 @@
-﻿using LeoEcsPhysics;
-using Leopotam.EcsLite;
-using TMPro;
+﻿using Leopotam.EcsLite;
+using Leopotam.EcsLite.Di;
 using UnityEngine;
-using UnityEngine.UI;
 
-sealed class DamageInputSystem : IEcsRunSystem, IEcsInitSystem
+sealed class DamageInputSystem : IEcsRunSystem
 {
-    private EcsWorld _world = null;
+    readonly EcsFilterInject<Inc<ProjectileCollisionEnemyComponent,
+        HpComponent>> _filterEnemyCollision = default;
+    readonly EcsPoolInject<ProjectileCollisionEnemyComponent> _poolEnemyCollision = default;
+    readonly EcsPoolInject<HpComponent> _poolHp = default;
     
-    public void Init(EcsSystems systems)
-    {
-        _world = systems.GetWorld ();
-    }
-
+    readonly EcsFilterInject<Inc<EnemyCollisionPlayerComponent>> _filterPlayerCollision = default;
+    readonly EcsPoolInject<EnemyCollisionPlayerComponent> _poolPlayerCollision = default;
+    
     public void Run(EcsSystems systems)
     {
-        var filterEnemyCollision = _world.Filter<ProjectileCollisionEnemyComponent>()
-            .Inc<HpComponent>().End();
-        var poolEnemyCollision = _world.GetPool<ProjectileCollisionEnemyComponent>();
-        var poolHp = _world.GetPool<HpComponent>();
-        
-        var filterPlayerCollision = _world.Filter<EnemyCollisionPlayerComponent>().End();
-        var poolPlayerCollision = _world.GetPool<EnemyCollisionPlayerComponent>();
+        var filterEnemyCollision = _filterEnemyCollision.Value;
+        var poolEnemyCollision = _poolEnemyCollision.Value;
+        var poolHp = _poolHp.Value;
+
+        var filterPlayerCollision = _filterPlayerCollision.Value;
+        var poolPlayerCollision = _poolPlayerCollision.Value;
 
         foreach (var entity in filterEnemyCollision)
         {

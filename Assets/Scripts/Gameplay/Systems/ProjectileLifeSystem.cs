@@ -1,30 +1,27 @@
 ﻿using Leopotam.EcsLite;
+using Leopotam.EcsLite.Di;
 using UnityEngine;
 
-sealed class ProjectileLifeSystem : IEcsRunSystem, IEcsInitSystem
+sealed class ProjectileLifeSystem : IEcsRunSystem
 {
-    private EcsWorld _world;
-
+    readonly EcsFilterInject<Inc<LifeTimeComponent,
+        ProjectileTag>> _filter = default;
+    readonly EcsPoolInject<LifeTimeComponent> _weaponEquip = default;
+    readonly EcsPoolInject<DeathComponent> _deathPool = default;
+    
     public void Run(EcsSystems systems)
     {
-        var filter = _world.Filter<LifeTimeComponent>()
-            .Inc<ProjectileTag>().End();
-        var weaponEquip = _world.GetPool<LifeTimeComponent>();
+        var filter = _filter.Value;
+        var weaponEquip = _weaponEquip.Value;
         foreach (var i in filter)
         {
             ref var lifeTimeComponent = ref weaponEquip.Get(i);
             lifeTimeComponent.LifeTime -= Time.deltaTime;
             if (lifeTimeComponent.LifeTime <= 0)
             {
-                var deathPool = _world.GetPool<DeathComponent>();
+                var deathPool = _deathPool.Value;
                 deathPool.Add(i);
             }
         }
     }
-
-    public void Init(EcsSystems systems)
-    {
-        _world = systems.GetWorld();
-    }
-
 }

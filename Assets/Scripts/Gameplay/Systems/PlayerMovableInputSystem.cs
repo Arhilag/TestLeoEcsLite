@@ -1,4 +1,5 @@
 ﻿using Leopotam.EcsLite;
+using Leopotam.EcsLite.Di;
 using UnityEngine;
 
 sealed class PlayerMovableInputSystem : IEcsRunSystem
@@ -6,13 +7,15 @@ sealed class PlayerMovableInputSystem : IEcsRunSystem
     private float _moveX;
     private float _moveZ;
         
+    readonly EcsFilterInject<Inc<DirectionComponent, 
+        PlayerTag>> _filter = default;
+    readonly EcsPoolInject<DirectionComponent> _player = default;
+    
     public void Run(EcsSystems systems)
     {
         SetDirection();
-        EcsWorld world = systems.GetWorld ();
-        var filter = world.Filter<DirectionComponent>()
-            .Inc<PlayerTag>().End();
-        var player = world.GetPool<DirectionComponent>();
+        var filter = _filter.Value;
+        var player = _player.Value;
         foreach (var i in filter)
         {
             ref var directionComponent = ref player.Get(i);

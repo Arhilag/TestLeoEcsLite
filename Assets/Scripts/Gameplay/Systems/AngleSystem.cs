@@ -1,17 +1,18 @@
 ﻿using Leopotam.EcsLite;
-using UnityEngine;
+using Leopotam.EcsLite.Di;
 
 sealed class AngleSystem : IEcsRunSystem
 {
-    private EcsWorld _world = null;
-
+    readonly EcsFilterInject<Inc<AngleComponent,
+        ModelComponent>> _filter = default;
+    readonly EcsPoolInject<AngleComponent> _anglePool = default;
+    readonly EcsPoolInject<ModelComponent> _modelPool = default;
+    
     public void Run(EcsSystems systems)
     {
-        _world = systems.GetWorld ();
-        var filter = _world.Filter<AngleComponent>()
-            .Inc<ModelComponent>().End();
-        var anglePool = _world.GetPool<AngleComponent>();
-        var modelPool = _world.GetPool<ModelComponent>();
+        var filter = _filter.Value;
+        var anglePool = _anglePool.Value;
+        var modelPool = _modelPool.Value;
         
         foreach (var i in filter)
         {
